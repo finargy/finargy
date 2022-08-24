@@ -1,0 +1,35 @@
+
+version: "3.10"
+services:
+  mongo-express:
+      image: mongo-express
+      container_name: "finargy-mongo-express"
+      restart: always
+      ports:
+        - 8081:8081
+      environment:
+        ME_CONFIG_MONGODB_SERVER: mongo
+        ME_CONFIG_MONGODB_ADMINUSERNAME: frankvedo
+        ME_CONFIG_MONGODB_ADMINPASSWORD: frankvedo
+        ME_CONFIG_BASICAUTH_USERNAME: frankvedo
+        ME_CONFIG_BASICAUTH_PASSWORD: frankvedo
+      depends_on:
+        - mongo
+  mongo:
+    image: mongo
+    container_name: "finargy-mongo-db"
+    command: mongod --port 27017
+    ports:
+      - "27018:27017"
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: frankvedo 
+      MONGO_INITDB_ROOT_PASSWORD: frankvedo
+      MONGO_INITDB_DATABASE: finargy
+    volumes:
+      - finargy_mongo_data:/dump
+
+volumes:
+  finargy_mongo_data:
+    driver: local
+    name: finargy_mongo_data
