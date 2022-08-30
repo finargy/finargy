@@ -1,5 +1,4 @@
-import {ICurrency} from "./currency";
-import {IUser} from "./user";
+import {ICurrency, IUser} from ".";
 
 export interface IUserAccount {
   _id: string;

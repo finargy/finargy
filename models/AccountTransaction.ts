@@ -2,6 +2,10 @@ import mongoose, {Schema, model, Model} from "mongoose";
 
 import {IAccountTransaction} from "../interfaces";
 
+type TransactionType = "income" | "expense";
+
+const transactionType: TransactionType[] = ["income", "expense"];
+
 const accountTransactionSchema = new Schema(
   {
     _id: {type: mongoose.Schema.Types.ObjectId, default: mongoose.Types.ObjectId},
@@ -14,7 +18,7 @@ const accountTransactionSchema = new Schema(
     type: {
       type: String,
       enum: {
-        values: ["income", "expense"],
+        values: transactionType,
         message: "{VALUE} is not a valid type",
         default: "expense",
         required: true,

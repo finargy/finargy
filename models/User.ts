@@ -2,6 +2,10 @@ import mongoose, {Schema, model, Model} from "mongoose";
 
 import {IUser} from "../interfaces";
 
+type UserRole = "admin" | "user" | "root";
+
+const userRoles: UserRole[] = ["admin", "user", "root"];
+
 const userSchema = new Schema(
   {
     name: {type: String, required: true},
@@ -13,7 +17,7 @@ const userSchema = new Schema(
     role: {
       type: String,
       enum: {
-        values: ["admin", "user"],
+        values: userRoles,
         message: "{VALUE} is not a valid role",
         default: "client",
         required: true,

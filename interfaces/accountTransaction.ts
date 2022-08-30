@@ -1,5 +1,4 @@
-import {ICategory} from "./category";
-import {IUserAccount} from "./userAccount";
+import {ICategory, IUserAccount} from ".";
 
 export interface IAccountTransaction {
   _id: string;
