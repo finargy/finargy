@@ -18,6 +18,6 @@ const currencySchema = new Schema(
 
 currencySchema.index({code: "text"});
 
-const Currency: Model<ICurrency> = mongoose.models.Product || model("Currency", currencySchema);
+const Currency: Model<ICurrency> = mongoose.models.Currency || model("Currency", currencySchema);
 
 export default Currency;

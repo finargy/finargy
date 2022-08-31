@@ -10,9 +10,9 @@ export interface IUser {
   birthDate: string;
   role: string;
 
-  isActive: boolean;
-  isDeleted: boolean;
-  isVerified: boolean;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  isVerified?: boolean;
 
   createdAt?: string;
   updatedAt?: string;

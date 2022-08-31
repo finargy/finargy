@@ -2,9 +2,9 @@ import mongoose, {Schema, model, Model} from "mongoose";
 
 import {IUser} from "../interfaces";
 
-type UserRole = "admin" | "user" | "root";
+type UserRole = "admin" | "user";
 
-const userRoles: UserRole[] = ["admin", "user", "root"];
+const userRoles: UserRole[] = ["admin", "user"];
 
 const userSchema = new Schema(
   {
@@ -12,14 +12,14 @@ const userSchema = new Schema(
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     country: {type: mongoose.Schema.Types.ObjectId, ref: "Country", required: true},
-    preferedCurrency: {type: mongoose.Schema.Types.ObjectId, ref: "Currency", required: true},
+    preferredCurrency: {type: mongoose.Schema.Types.ObjectId, ref: "Currency", required: true},
     birthDate: {type: Date, required: true},
     role: {
       type: String,
       enum: {
         values: userRoles,
         message: "{VALUE} is not a valid role",
-        default: "client",
+        default: "user",
         required: true,
       },
     },

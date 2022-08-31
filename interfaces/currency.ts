@@ -3,10 +3,10 @@ export interface ICurrency {
   name: string;
   code: string;
   symbol: string;
-  decimals: number;
+  decimals?: number;
 
-  isActive: boolean;
-  isDeleted: boolean;
+  isActive?: boolean;
+  isDeleted?: boolean;
 
   createdAt?: string;
   updatedAt?: string;
