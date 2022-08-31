@@ -4,6 +4,7 @@ export interface ICurrency {
   code: string;
   symbol: string;
   decimals: number;
+
   isActive: boolean;
   isDeleted: boolean;
 

@@ -1,1 +1,1 @@
-export * as default from "./db";
+export * as db from "./db";
