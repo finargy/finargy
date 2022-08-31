@@ -1,6 +1,9 @@
-import {faker} from "@faker-js/faker";
 import mongoose from "mongoose";
+import {faker} from "@faker-js/faker";
 
+/**
+ * Currency mock data.
+ */
 const currencies = [
   {
     _id: new mongoose.Types.ObjectId(),
@@ -16,6 +19,9 @@ const currencies = [
   },
 ];
 
+/**
+ * Cuntry mock data.
+ */
 const countries = [
   {
     _id: new mongoose.Types.ObjectId(),
@@ -29,6 +35,9 @@ const countries = [
   },
 ];
 
+/**
+ * Users mock data, contains an admin user and many regular users.
+ */
 const users = [
   {
     name: "Admin",
