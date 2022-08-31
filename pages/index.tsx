@@ -1,9 +1,15 @@
 import type {NextPage} from "next";
 
-import {Heading} from "@chakra-ui/react";
+import {Box, Heading, Link} from "@chakra-ui/react";
 
 const Home: NextPage = () => {
-  return <Heading>Finargy</Heading>;
+  return (
+    <Box>
+      <Heading>Finargy</Heading>
+
+      <Link href="/api/auth/login">Login</Link>
+    </Box>
+  );
 };
 
 export default Home;
