@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   await db.connect();
 
   await User.deleteMany();
-  await User.insertMany(seedData.users);
+  await User.insertMany(seedData.users(12));
 
   await Currency.deleteMany();
   await Currency.insertMany(seedData.currencies);
