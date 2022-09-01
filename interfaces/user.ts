@@ -6,7 +6,6 @@ export interface IUser {
   email: string;
   password?: string;
   preferredCurrency: ICurrency;
-  birthDate: string;
   role: string;
 
   isActive?: boolean;

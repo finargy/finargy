@@ -12,7 +12,6 @@ const userSchema = new Schema(
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     preferredCurrency: {type: mongoose.Schema.Types.ObjectId, ref: "Currency", required: true},
-    birthDate: {type: Date, required: true},
     role: {
       type: String,
       enum: {
