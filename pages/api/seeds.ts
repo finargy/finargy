@@ -1,4 +1,4 @@
-import type {NextApiResponse} from "next";
+import type {NextApiResponse, NextApiRequest} from "next";
 
 import {db, seedData} from "../../database";
 import {Currency, User, UserAccount, Category, AccountTransaction} from "../../models";
@@ -15,7 +15,7 @@ type Data = {
  * Purges the database before seeding.Then proceeds to seed the Currency and User collections.
  * @param {Object} res The response object.
  */
-export default async function handler(res: NextApiResponse<Data>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   if (process.env.NODE_ENV === "production") {
     return res.status(403).json({message: "Forbidden"});
   }

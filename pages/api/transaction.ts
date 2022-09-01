@@ -3,7 +3,7 @@ import type {NextApiRequest, NextApiResponse} from "next";
 import {db} from "../../database";
 import {AccountTransaction} from "../../models";
 
-const getAllTransactions = async (req: NextApiRequest, res: NextApiResponse) => {
+const getAllTransactions = async (res: NextApiResponse) => {
   await db.connect();
   const allTransactions = await AccountTransaction.find();
 
@@ -14,26 +14,41 @@ const getAllTransactions = async (req: NextApiRequest, res: NextApiResponse) => 
 
 const getTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
   await db.connect();
-  await AccountTransaction.findById(req.query.id);
+  const transactionById = await AccountTransaction.findById(req.query.id);
+
   await db.disconnect();
+
+  return res.status(200).json({data: transactionById});
 };
 
 const postTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
   await db.connect();
-  await AccountTransaction.create(req.body);
+  const newTrasaction = await AccountTransaction.create(req.body);
+
   await db.disconnect();
+
+  return res.status(201).json({data: newTrasaction});
 };
 
 const putTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
   await db.connect();
-  await AccountTransaction.findOneAndUpdate({id: req.query.id}, req.body);
+  const updatedTransaction = await AccountTransaction.findOneAndUpdate(
+    {id: req.query.id},
+    req.body,
+  );
+
   await db.disconnect();
+
+  return res.status(200).json({data: updatedTransaction});
 };
 
 const deleteTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
   await db.connect();
-  await AccountTransaction.findOneAndDelete({id: req.query.id});
+  const deletedTransaction = await AccountTransaction.findOneAndDelete({id: req.query.id});
+
   await db.disconnect();
+
+  return res.status(200).json({data: deletedTransaction});
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -43,7 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return getTransaction(req, res);
       }
 
-      return getAllTransactions(req, res);
+      return getAllTransactions(res);
     case "POST":
       return postTransaction(req, res);
     case "PUT":
