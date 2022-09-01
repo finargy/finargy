@@ -1,7 +1,7 @@
 import type {NextApiRequest, NextApiResponse} from "next";
 
-import {db} from "../../../database";
-import {AccountTransaction} from "../../../models";
+import {db} from "../../../../database";
+import {AccountTransaction} from "../../../../models";
 
 /**
  * Handles requests to the /api/accounts/transactions endpoint.
