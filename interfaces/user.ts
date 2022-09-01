@@ -1,11 +1,10 @@
-import {ICountry, ICurrency} from ".";
+import {ICurrency} from ".";
 
 export interface IUser {
   _id: string;
   name: string;
   email: string;
   password?: string;
-  country: ICountry;
   preferredCurrency: ICurrency;
   birthDate: string;
   role: string;

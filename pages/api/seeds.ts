@@ -1,7 +1,7 @@
 import type {NextApiRequest, NextApiResponse} from "next";
 
 import {db, seedData} from "../../database";
-import {User, Country, Currency} from "../../models";
+import {User, Currency} from "../../models";
 
 /**
  * type of seed data response
@@ -12,7 +12,7 @@ type Data = {
 
 /**
  * Seeds the database with mock data. This is used for development purposes only.
- * Purges the database before seeding.Then proceeds to seed the Currency, Country and User collections.
+ * Purges the database before seeding.Then proceeds to seed the Currency and User collections.
  * @param {Object} res The response object.
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
@@ -27,9 +27,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   await Currency.deleteMany();
   await Currency.insertMany(seedData.currencies);
-
-  await Country.deleteMany();
-  await Country.insertMany(seedData.countries);
 
   await db.disconnect();
 
