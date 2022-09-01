@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "1.9.1",
     "@chakra-ui/react": "2.2.9",
     "@emotion/react": "11.10.0",
     "@emotion/styled": "11.10.0",
@@ -18,6 +17,7 @@
     "framer-motion": "7.2.1",
     "mongoose": "6.5.3",
     "next": "12.2.5",
+    "next-auth": "4.10.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },

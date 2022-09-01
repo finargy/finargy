@@ -1,14 +1,24 @@
 import type {NextPage} from "next";
 
-import {Box, Heading, Link} from "@chakra-ui/react";
+import {useSession, signIn, signOut} from "next-auth/react";
 
 const Home: NextPage = () => {
-  return (
-    <Box>
-      <Heading>Finargy</Heading>
+  const {data: session} = useSession();
 
-      <Link href="/api/auth/login">Login</Link>
-    </Box>
+  if (session) {
+    return (
+      <>
+        Signed in as {session.user?.email} <br />
+        <button onClick={() => signOut()}>Sign out</button>
+      </>
+    );
+  }
+
+  return (
+    <>
+      Not signed in <br />
+      <button onClick={() => signIn()}>Sign in</button>
+    </>
   );
 };
 
