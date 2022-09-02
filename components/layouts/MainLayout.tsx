@@ -1,6 +1,8 @@
 import Head from "next/head";
 import {FC, ReactNode} from "react";
 
+import {Navbar} from "./ui";
+
 interface Props {
   children: ReactNode;
   title: string;
@@ -23,7 +25,9 @@ export const MainLayout: FC<Props> = ({children, title, pageDescription, imageFu
         {imageFullUrl && <meta content={imageFullUrl} name="og:image" />}
       </Head>
 
-      <nav>{/* navbar component */}</nav>
+      <nav>
+        <Navbar />
+      </nav>
 
       <main>{children}</main>
 
