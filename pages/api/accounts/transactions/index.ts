@@ -73,10 +73,29 @@ const getTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
+/**
+ * This method is called when a POST request is made to the /api/accounts/transactions endpoint.
+ * Creates a new transaction in the database.
+ * @param req The request object. Contains the transaction body.
+ * Required fields: title, account, category, type, amount, date, description
+ * @param res The response object. Contains the created transaction.
+ * @returns The created transaction.
+ */
 const postTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
+  const newTrasactionData = req.body;
+  const requiredFields = ["title", "account", "category", "type", "amount"];
+
+  const missingFields = requiredFields.filter((field) => !newTrasactionData[field]);
+
+  if (missingFields.length > 0) {
+    return res
+      .status(400)
+      .json({error: true, message: `Missing required fields: ${missingFields.join(", ")}`});
+  }
+
   try {
     await db.connect();
-    const newTrasaction = await AccountTransaction.create(req.body);
+    const newTrasaction = await AccountTransaction.create(newTrasactionData);
 
     await db.disconnect();
 
