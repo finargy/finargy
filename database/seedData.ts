@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import {faker} from "@faker-js/faker";
 
 import {ICurrency, IUser, IUserAccount, ICategory, IAccountTransaction} from "../interfaces";
+import {currenciesData, CurrencyData} from "../data/currencies";
 
 interface ICurrencySeed extends Omit<ICurrency, "_id"> {
   _id: Types.ObjectId;
@@ -36,20 +37,13 @@ interface IAccountTransactionSeed
 /**
  * Currency mock data.
  */
-const currencies: ICurrencySeed[] = [
-  {
+
+const currencies: ICurrencySeed[] = currenciesData.map((currency: CurrencyData) => {
+  return {
     _id: new Types.ObjectId(),
-    name: "Argentine Peso",
-    code: "ARS",
-    symbol: "$",
-  },
-  {
-    _id: new Types.ObjectId(),
-    name: "United States Dollar",
-    code: "USD",
-    symbol: "u$d",
-  },
-];
+    ...currency,
+  };
+});
 
 /**
  * Users mock data, contains an admin user and many regular users.

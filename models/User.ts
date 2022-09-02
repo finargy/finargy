@@ -2,7 +2,7 @@ import mongoose, {Schema, model, Model} from "mongoose";
 
 import {IUser} from "../interfaces";
 
-type UserRole = "admin" | "user";
+export type UserRole = "admin" | "user";
 
 const userRoles: UserRole[] = ["admin", "user"];
 

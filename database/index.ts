@@ -1,3 +1,4 @@
 export * as db from "./db";
 export * from "./seedData";
-export * from "./dbAccountTransactions";
+export * as dbUsers from "./dbUsers";
+export * as dbATransactions from "./dbAccountTransactions";

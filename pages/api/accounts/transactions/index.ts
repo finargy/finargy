@@ -6,7 +6,7 @@ import {
   getAllAccountTransactions,
   updateAccountTransactionById,
   deleteAccountTransactionById,
-} from "../../../../database";
+} from "../../../../database/dbAccountTransactions";
 import {IAccountTransaction, IAccountTransactionEditables} from "../../../../interfaces";
 import {checkContainFields} from "../../../../utils";
 

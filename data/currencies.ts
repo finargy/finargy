@@ -1,10 +1,10 @@
-type Currency = {
+export type CurrencyData = {
   name: string;
   code: string;
   symbol: string;
 };
 
-export const currencies: Currency[] = [
+export const currenciesData: CurrencyData[] = [
   {
     name: "Peso Argentino",
     code: "ARS",
