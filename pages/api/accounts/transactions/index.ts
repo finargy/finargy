@@ -13,15 +13,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   switch (req.method) {
     case "GET":
       if (req.query.id) {
+        // /api/accounts/transactions/:id
         return getTransaction(req, res);
       }
 
+      // /api/accounts/transactions/
       return getAllTransactions(res);
     case "POST":
+      // /api/accounts/transactions/
       return postTransaction(req, res);
     case "PUT":
+      // /api/accounts/transactions/:id
       return putTransaction(req, res);
     case "DELETE":
+      // /api/accounts/transactions/:id
       return deleteTransaction(req, res);
 
     default:
@@ -35,12 +40,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
  * @returns All transactions for a user.
  */
 const getAllTransactions = async (res: NextApiResponse) => {
-  await db.connect();
-  const allTransactions = await AccountTransaction.find();
+  try {
+    await db.connect();
+    const transactions = await AccountTransaction.find();
 
-  await db.disconnect();
+    await db.disconnect();
 
-  return res.status(200).json({data: allTransactions});
+    return res.status(200).json({data: transactions});
+  } catch (error: any) {
+    //If an error occurs, return a 500
+    return res.status(500).json({message: "Internal server error", error: error.message});
+  }
 };
 
 /**
@@ -49,45 +59,120 @@ const getAllTransactions = async (res: NextApiResponse) => {
  * @returns The transaction matching the id.
  */
 const getTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
-  await db.connect();
-  const transactionById = await AccountTransaction.findById(req.query.id);
+  try {
+    await db.connect();
+    const transaction = await AccountTransaction.findById(req.query.id);
 
-  await db.disconnect();
+    await db.disconnect();
 
-  return res.status(200).json({data: transactionById});
+    // if no transaction is found, return a 404
+    if (transaction === null) {
+      return res.status(404).json({message: "Transaction not found"});
+    }
+
+    // otherwise, return a 200 with the transaction
+    return res.status(200).json({data: transaction});
+  } catch (error: any) {
+    //If an error occurs, return a 500
+    return res.status(500).json({message: "Internal server error", error: error.message});
+  }
 };
 
+/**
+ * This method is called when a POST request is made to the /api/accounts/transactions endpoint.
+ * Creates a new transaction in the database.
+ * @param req The request object. Contains the transaction body.
+ * Required fields: title, account, category, type, amount, date, description
+ * @param res The response object. Contains the created transaction.
+ * @returns The created transaction.
+ */
 const postTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
-  await db.connect();
-  const newTrasaction = await AccountTransaction.create(req.body);
+  const newTrasactionDict = req.body;
+  // required fields
+  const requiredFields = ["title", "account", "category", "type", "amount"];
 
-  await db.disconnect();
+  const missingFields = requiredFields.filter((field) => !newTrasactionDict[field]);
 
-  return res.status(201).json({data: newTrasaction});
+  // if any required fields are missing, return a 400, including the missing fields
+  if (missingFields.length > 0) {
+    return res
+      .status(400)
+      .json({error: true, message: `Missing required fields: ${missingFields.join(", ")}`});
+  }
+
+  try {
+    await db.connect();
+    const newTrasaction = await AccountTransaction.create(newTrasactionDict);
+
+    await db.disconnect();
+
+    return res.status(201).json({data: newTrasaction});
+  } catch (error: any) {
+    //If an error occurs, return a 500
+    return res.status(500).json({message: "Internal server error", error: error.message});
+  }
 };
 
 const putTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
-  await db.connect();
-  const updatedTransaction = await AccountTransaction.findOneAndUpdate(
-    {id: req.query.id},
-    req.body,
+  const editTransactionDict = req.body;
+  const editableFields = ["title", "category", "type", "amount", "date", "description"];
+
+  if (Object.keys(editTransactionDict).length === 0) {
+    return res.status(400).json({error: true, message: "Missing request body"});
+  }
+
+  const invalidFields = Object.keys(editTransactionDict).filter(
+    (field) => !editableFields.includes(field),
   );
 
-  await db.disconnect();
+  if (invalidFields.length > 0) {
+    return res
+      .status(400)
+      .json({error: true, message: `Invalid fields: ${invalidFields.join(", ")}`});
+  }
 
-  return res.status(200).json({data: updatedTransaction});
+  try {
+    await db.connect();
+    const editedTransaction = await AccountTransaction.findOneAndUpdate(
+      {_id: req.query.id},
+      editTransactionDict,
+      {new: true},
+    );
+
+    await db.disconnect();
+
+    return res.status(200).json({data: editedTransaction});
+  } catch (error: any) {
+    //If an error occurs, return a 500
+    return res.status(500).json({message: "Internal server error", error: error.message});
+  }
 };
 
 /**
  * Deletes a single transaction from the database by id.
  * @param res The response object. Contains the deleted transaction.
- * @returns The deleted transaction matching the id.
+ * @returns A success message, and the deleted transaction's id.
  */
 const deleteTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
-  await db.connect();
-  const deletedTransaction = await AccountTransaction.findOneAndDelete({id: req.query.id});
+  const transactionId = req.query.id;
 
-  await db.disconnect();
+  try {
+    await db.connect();
+    const deletedTransaction = await AccountTransaction.findOneAndDelete({
+      _id: transactionId,
+    });
 
-  return res.status(200).json({data: {deleted: true, ...deletedTransaction}});
+    await db.disconnect();
+
+    // if no transaction is found, return a 404
+    if (deletedTransaction === null) {
+      return res.status(404).json({message: "Transaction not found"});
+    }
+
+    // otherwise, return a 200 with the deleted transaction's id
+    return res.status(200).json({message: "Transaction deleted", data: deletedTransaction});
+  } catch (error: any) {
+    //If an error occurs, return a 500
+    return res.status(500).json({message: "Internal server error", error: error.message});
+  }
 };
