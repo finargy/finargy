@@ -4,11 +4,11 @@ export interface IUserAccount {
   _id: string;
   name: string;
   icon: string;
-  user: IUser;
+  user: IUser | string;
   totalIncome: number;
   totalExpense: number;
   totalBalance: number;
-  preferedCurrency: ICurrency;
+  preferedCurrency: ICurrency | string;
   isActive: boolean;
   isDeleted: boolean;
 

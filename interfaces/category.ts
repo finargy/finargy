@@ -5,7 +5,7 @@ export interface ICategory {
   name: string;
   icon: string;
   color: string;
-  user: IUser;
+  user: IUser | string;
   createdAt?: string;
   updatedAt?: string;
 }

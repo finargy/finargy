@@ -1,7 +1,19 @@
 import type {NextApiRequest, NextApiResponse} from "next";
 
-import {db} from "../../../../database";
-import {AccountTransaction} from "../../../../models";
+import {
+  createAccountTransaction,
+  getAccountTransactionById,
+  getAllAccountTransactions,
+  updateAccountTransactionById,
+  deleteAccountTransactionById,
+} from "../../../../database";
+import {IAccountTransaction, IAccountTransactionEditables} from "../../../../interfaces";
+import {checkContainFields} from "../../../../utils";
+
+type Data =
+  | {error?: any; message: string}
+  | {data: IAccountTransaction}
+  | {data: IAccountTransaction[]};
 
 /**
  * Handles requests to the /api/accounts/transactions endpoint.
@@ -9,7 +21,7 @@ import {AccountTransaction} from "../../../../models";
  * @param res The response object.
  * @returns The response object.
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
     case "GET":
       if (req.query.id) {
@@ -39,12 +51,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
  * @param res The response object. Contains all the transactions.
  * @returns All transactions for a user.
  */
-const getAllTransactions = async (res: NextApiResponse) => {
+const getAllTransactions = async (res: NextApiResponse<Data>) => {
   try {
-    await db.connect();
-    const transactions = await AccountTransaction.find();
-
-    await db.disconnect();
+    const transactions = await getAllAccountTransactions();
 
     return res.status(200).json({data: transactions});
   } catch (error: any) {
@@ -58,15 +67,14 @@ const getAllTransactions = async (res: NextApiResponse) => {
  * @param res The response object. Contains the transaction.
  * @returns The transaction matching the id.
  */
-const getTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    await db.connect();
-    const transaction = await AccountTransaction.findById(req.query.id);
+const getTransaction = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const {id = ""} = req.query as {id: string};
 
-    await db.disconnect();
+  try {
+    const transaction = await getAccountTransactionById(id);
 
     // if no transaction is found, return a 404
-    if (transaction === null) {
+    if (!transaction) {
       return res.status(404).json({message: "Transaction not found"});
     }
 
@@ -86,12 +94,13 @@ const getTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
  * @param res The response object. Contains the created transaction.
  * @returns The created transaction.
  */
-const postTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
-  const newTrasactionDict = req.body;
+const postTransaction = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const newTrasactionDict = req.body as IAccountTransaction;
+
   // required fields
   const requiredFields = ["title", "account", "category", "type", "amount"];
 
-  const missingFields = requiredFields.filter((field) => !newTrasactionDict[field]);
+  const missingFields = checkContainFields(requiredFields, newTrasactionDict);
 
   // if any required fields are missing, return a 400, including the missing fields
   if (missingFields.length > 0) {
@@ -101,10 +110,11 @@ const postTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    await db.connect();
-    const newTrasaction = await AccountTransaction.create(newTrasactionDict);
+    const newTrasaction = await createAccountTransaction(newTrasactionDict);
 
-    await db.disconnect();
+    if (!newTrasaction) {
+      return res.status(400).json({error: true, message: "Mongo ids are not valid"});
+    }
 
     return res.status(201).json({data: newTrasaction});
   } catch (error: any) {
@@ -113,12 +123,20 @@ const postTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const putTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
-  const editTransactionDict = req.body;
+const putTransaction = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const {id = "", ...editTransactionDict} = req.body as {
+    id: string;
+    editTransactionDict: IAccountTransactionEditables;
+  };
+
   const editableFields = ["title", "category", "type", "amount", "date", "description"];
 
-  if (Object.keys(editTransactionDict).length === 0) {
-    return res.status(400).json({error: true, message: "Missing request body"});
+  if (id.length === 0) {
+    return res.status(400).json({error: true, message: "Missing transaction id"});
+  }
+
+  if (!editTransactionDict) {
+    return res.status(400).json({error: true, message: "No fields to update"});
   }
 
   const invalidFields = Object.keys(editTransactionDict).filter(
@@ -132,14 +150,13 @@ const putTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    await db.connect();
-    const editedTransaction = await AccountTransaction.findOneAndUpdate(
-      {_id: req.query.id},
-      editTransactionDict,
-      {new: true},
-    );
+    const editedTransaction = await updateAccountTransactionById(id, editTransactionDict as any);
 
-    await db.disconnect();
+    if (!editedTransaction) {
+      return res
+        .status(404)
+        .json({error: true, message: "Account transaction not found or the id is not valid"});
+    }
 
     return res.status(200).json({data: editedTransaction});
   } catch (error: any) {
@@ -153,20 +170,15 @@ const putTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
  * @param res The response object. Contains the deleted transaction.
  * @returns A success message, and the deleted transaction's id.
  */
-const deleteTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
-  const transactionId = req.query.id;
+const deleteTransaction = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const {id = ""} = req.query as {id: string};
 
   try {
-    await db.connect();
-    const deletedTransaction = await AccountTransaction.findOneAndDelete({
-      _id: transactionId,
-    });
-
-    await db.disconnect();
+    const deletedTransaction = await deleteAccountTransactionById(id);
 
     // if no transaction is found, return a 404
-    if (deletedTransaction === null) {
-      return res.status(404).json({message: "Transaction not found"});
+    if (!deletedTransaction) {
+      return res.status(404).json({message: "Transaction not found or the id is not valid"});
     }
 
     // otherwise, return a 200 with the deleted transaction's id

@@ -2,7 +2,7 @@ import mongoose, {Schema, model, Model} from "mongoose";
 
 import {IAccountTransaction} from "../interfaces";
 
-type TransactionType = "income" | "expense";
+export type TransactionType = "income" | "expense";
 
 const transactionType: TransactionType[] = ["income", "expense"];
 
