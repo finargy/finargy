@@ -10,10 +10,10 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_SECRET_ID || "",
     }),
   ],
-  // pages: {
-  //   signIn: "/auth/login",
-  //   newUser: "/auth/register",
-  // },
+  pages: {
+    signIn: "/auth/login",
+    newUser: "/auth/register",
+  },
   session: {
     maxAge: 86400, // 1 day
   },
