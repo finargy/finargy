@@ -35,12 +35,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
  * @returns All transactions for a user.
  */
 const getAllTransactions = async (res: NextApiResponse) => {
-  await db.connect();
-  const allTransactions = await AccountTransaction.find();
+  try {
+    await db.connect();
+    const transactions = await AccountTransaction.find();
 
-  await db.disconnect();
+    await db.disconnect();
 
-  return res.status(200).json({data: allTransactions});
+    return res.status(200).json({data: transactions});
+  } catch (error: any) {
+    //If an error occurs, return a 500
+    return res.status(500).json({message: "Internal server error", error: error.message});
+  }
 };
 
 /**
@@ -49,45 +54,81 @@ const getAllTransactions = async (res: NextApiResponse) => {
  * @returns The transaction matching the id.
  */
 const getTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
-  await db.connect();
-  const transactionById = await AccountTransaction.findById(req.query.id);
+  try {
+    await db.connect();
+    const transaction = await AccountTransaction.findById(req.query.id);
 
-  await db.disconnect();
+    await db.disconnect();
 
-  return res.status(200).json({data: transactionById});
+    // if no transaction is found, return a 404
+    if (transaction === null) {
+      return res.status(404).json({message: "Transaction not found"});
+    }
+
+    // otherwise, return a 200 with the transaction
+    return res.status(200).json({data: transaction});
+  } catch (error: any) {
+    //If an error occurs, return a 500
+    return res.status(500).json({message: "Internal server error", error: error.message});
+  }
 };
 
 const postTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
-  await db.connect();
-  const newTrasaction = await AccountTransaction.create(req.body);
+  try {
+    await db.connect();
+    const newTrasaction = await AccountTransaction.create(req.body);
 
-  await db.disconnect();
+    await db.disconnect();
 
-  return res.status(201).json({data: newTrasaction});
+    return res.status(201).json({data: newTrasaction});
+  } catch (error: any) {
+    //If an error occurs, return a 500
+    return res.status(500).json({message: "Internal server error", error: error.message});
+  }
 };
 
 const putTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
-  await db.connect();
-  const updatedTransaction = await AccountTransaction.findOneAndUpdate(
-    {id: req.query.id},
-    req.body,
-  );
+  try {
+    await db.connect();
+    const updatedTransaction = await AccountTransaction.findOneAndUpdate(
+      {_id: req.query.id},
+      req.body,
+    );
 
-  await db.disconnect();
+    await db.disconnect();
 
-  return res.status(200).json({data: updatedTransaction});
+    return res.status(200).json({data: updatedTransaction});
+  } catch (error: any) {
+    //If an error occurs, return a 500
+    return res.status(500).json({message: "Internal server error", error: error.message});
+  }
 };
 
 /**
  * Deletes a single transaction from the database by id.
  * @param res The response object. Contains the deleted transaction.
- * @returns The deleted transaction matching the id.
+ * @returns A success message, and the deleted transaction's id.
  */
 const deleteTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
-  await db.connect();
-  const deletedTransaction = await AccountTransaction.findOneAndDelete({id: req.query.id});
+  const transactionId = req.query.id;
 
-  await db.disconnect();
+  try {
+    await db.connect();
+    const deletedTransaction = await AccountTransaction.findOneAndDelete({
+      _id: transactionId,
+    });
 
-  return res.status(200).json({data: {deleted: true, ...deletedTransaction}});
+    await db.disconnect();
+
+    // if no transaction is found, return a 404
+    if (deletedTransaction === null) {
+      return res.status(404).json({message: "Transaction not found"});
+    }
+
+    // otherwise, return a 200 with the deleted transaction's id
+    return res.status(200).json({message: "Transaction deleted", data: deletedTransaction});
+  } catch (error: any) {
+    //If an error occurs, return a 500
+    return res.status(500).json({message: "Internal server error", error: error.message});
+  }
 };
