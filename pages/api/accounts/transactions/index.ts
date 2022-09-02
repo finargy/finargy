@@ -13,15 +13,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   switch (req.method) {
     case "GET":
       if (req.query.id) {
+        // /api/accounts/transactions/:id
         return getTransaction(req, res);
       }
 
+      // /api/accounts/transactions/
       return getAllTransactions(res);
     case "POST":
+      // /api/accounts/transactions/
       return postTransaction(req, res);
     case "PUT":
+      // /api/accounts/transactions/:id
       return putTransaction(req, res);
     case "DELETE":
+      // /api/accounts/transactions/:id
       return deleteTransaction(req, res);
 
     default:
@@ -82,11 +87,13 @@ const getTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
  * @returns The created transaction.
  */
 const postTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
-  const newTrasactionData = req.body;
+  const newTrasactionDict = req.body;
+  // required fields
   const requiredFields = ["title", "account", "category", "type", "amount"];
 
-  const missingFields = requiredFields.filter((field) => !newTrasactionData[field]);
+  const missingFields = requiredFields.filter((field) => !newTrasactionDict[field]);
 
+  // if any required fields are missing, return a 400, including the missing fields
   if (missingFields.length > 0) {
     return res
       .status(400)
@@ -95,7 +102,7 @@ const postTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     await db.connect();
-    const newTrasaction = await AccountTransaction.create(newTrasactionData);
+    const newTrasaction = await AccountTransaction.create(newTrasactionDict);
 
     await db.disconnect();
 
@@ -107,16 +114,34 @@ const postTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 const putTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
+  const editTransactionDict = req.body;
+  const editableFields = ["title", "category", "type", "amount", "date", "description"];
+
+  if (Object.keys(editTransactionDict).length === 0) {
+    return res.status(400).json({error: true, message: "Missing request body"});
+  }
+
+  const invalidFields = Object.keys(editTransactionDict).filter(
+    (field) => !editableFields.includes(field),
+  );
+
+  if (invalidFields.length > 0) {
+    return res
+      .status(400)
+      .json({error: true, message: `Invalid fields: ${invalidFields.join(", ")}`});
+  }
+
   try {
     await db.connect();
-    const updatedTransaction = await AccountTransaction.findOneAndUpdate(
+    const editedTransaction = await AccountTransaction.findOneAndUpdate(
       {_id: req.query.id},
-      req.body,
+      editTransactionDict,
+      {new: true},
     );
 
     await db.disconnect();
 
-    return res.status(200).json({data: updatedTransaction});
+    return res.status(200).json({data: editedTransaction});
   } catch (error: any) {
     //If an error occurs, return a 500
     return res.status(500).json({message: "Internal server error", error: error.message});
