@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {GetServerSideProps, NextPage} from "next";
 import {getProviders, getSession, signIn} from "next-auth/react";
 import NextLink from "next/link";
@@ -55,8 +55,20 @@ const LoginPage: NextPage<Props> = ({providers}) => {
   const [showError, setShowError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const onLoginUser = () => {
-    // TODO
+  useEffect(() => {
+    const error = router.query.error as string;
+
+    if (error === "CredentialsSignin") {
+      setShowError(true);
+    }
+  }, [router]);
+
+  const onLoginUser = async ({email, password}: FormData) => {
+    setShowError(false);
+    setIsLoading(true);
+
+    await signIn("credentials", {email, password});
+    setIsLoading(false);
   };
 
   return (

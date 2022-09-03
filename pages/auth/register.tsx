@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {GetServerSideProps, NextPage} from "next";
 import {getProviders, getSession, signIn} from "next-auth/react";
 import NextLink from "next/link";
@@ -23,6 +23,7 @@ import {useRouter} from "next/router";
 
 import {AuthLayout} from "../../components/layouts";
 import {validations} from "../../utils";
+import {AuthContext} from "../../context/auth";
 
 type Providers = {
   [key: string]: {
@@ -48,6 +49,8 @@ type Props = {
 const RegisterPage: NextPage<Props> = ({providers}) => {
   const {google} = providers;
   const router = useRouter();
+  const {registerUser} = useContext(AuthContext);
+  const [errorMessage, setErrorMessage] = useState("");
   const {
     register,
     handleSubmit,
@@ -57,12 +60,35 @@ const RegisterPage: NextPage<Props> = ({providers}) => {
   const [showError, setShowError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const onRegisterUser = () => {
-    // TODO
+  const onRegisterUser = async ({email, password, password2, name}: FormData) => {
+    if (password !== password2) {
+      setShowError(true);
+      setErrorMessage("Las contraseñas no coinciden");
+      setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+    }
+    setShowError(false);
+    setIsLoading(true);
+    const {hasError, message} = await registerUser(email, password, name);
+
+    if (hasError) {
+      setShowError(true);
+      setErrorMessage(message!);
+      setIsLoading(false);
+      setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+
+      return;
+    }
+
+    await signIn("credentials", {email, password});
+    setIsLoading(false);
   };
 
   return (
-    <AuthLayout title="Ingresar">
+    <AuthLayout title="Registrarme">
       <form noValidate onSubmit={handleSubmit(onRegisterUser)}>
         <Grid
           backgroundColor="whiteAlpha.200"
@@ -75,7 +101,7 @@ const RegisterPage: NextPage<Props> = ({providers}) => {
           <GridItem>
             <Tag colorScheme="red" display={showError ? "flex" : "none"} p={3} w="100%">
               <Icon as={BiErrorCircle} fontSize="lg" mr={1} />
-              Email o contraseña incorrectos
+              {errorMessage}
             </Tag>
           </GridItem>
 
@@ -173,7 +199,7 @@ const RegisterPage: NextPage<Props> = ({providers}) => {
               type="submit"
               w="100%"
             >
-              Ingresar
+              Registrarme
             </Button>
           </GridItem>
 
