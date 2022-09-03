@@ -20,6 +20,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
   }
 }
 
+/**
+ * Register a user in the database
+ * @param {NextApiRequest} req - NextApiRequest - This is the request object that Next.js provides. It
+ * contains information about the request, such as the body, headers, and query parameters.
+ * @param res - NextApiResponse<Data>
+ * @returns The user object with the name, email, role and preferredCurrency or an error message
+ */
 const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const {
     name = "",

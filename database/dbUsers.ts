@@ -34,8 +34,7 @@ export const checkUserEmailPassword = async (email: string = "", password: strin
 };
 
 /**
- * It takes an email and a name, checks if the email exists in the database, if it does, it returns the
- * user, if it doesn't, it creates a new user with the email and name, and returns the new user
+ * Check that the oAuth user exists in the database, if not a new user is created and saved into database
  * @param {string} oAuthEmail - The email address of the user that is trying to log in.
  * @param {string} oAuthName - The name of the user that was retrieved from the OAuth provider.
  * @returns an object with the following properties:

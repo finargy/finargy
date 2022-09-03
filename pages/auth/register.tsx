@@ -1,4 +1,4 @@
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import {GetServerSideProps, NextPage} from "next";
 import {getProviders, getSession, signIn} from "next-auth/react";
 import NextLink from "next/link";
@@ -24,6 +24,7 @@ import {useRouter} from "next/router";
 import {AuthLayout} from "../../components/layouts";
 import {validations} from "../../utils";
 import {AuthContext} from "../../context/auth";
+import {useErrorForm} from "../../hooks";
 
 type Providers = {
   [key: string]: {
@@ -50,15 +51,20 @@ const RegisterPage: NextPage<Props> = ({providers}) => {
   const {google} = providers;
   const router = useRouter();
   const {registerUser} = useContext(AuthContext);
-  const [errorMessage, setErrorMessage] = useState("");
+
   const {
     register,
     handleSubmit,
     formState: {errors},
   } = useForm<FormData>();
 
-  const [showError, setShowError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const {isLoading, setIsLoading, showError, setShowError, errorMessage, setErrorMessage} =
+    useErrorForm({
+      textError: "",
+      displayError: false,
+      loading: false,
+      queryErrors: false,
+    });
 
   const onRegisterUser = async ({email, password, password2, name}: FormData) => {
     if (password !== password2) {
@@ -67,6 +73,8 @@ const RegisterPage: NextPage<Props> = ({providers}) => {
       setTimeout(() => {
         setShowError(false);
       }, 3000);
+
+      return;
     }
     setShowError(false);
     setIsLoading(true);
@@ -178,7 +186,7 @@ const RegisterPage: NextPage<Props> = ({providers}) => {
                 color="black"
                 id="password2"
                 type="password"
-                {...register("password", {
+                {...register("password2", {
                   required: "Este campo es requerido",
                   minLength: {
                     value: 6,

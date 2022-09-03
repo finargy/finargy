@@ -1,6 +1,6 @@
-import {useEffect, useState} from "react";
 import {GetServerSideProps, NextPage} from "next";
 import {getProviders, getSession, signIn} from "next-auth/react";
+import {useRouter} from "next/router";
 import NextLink from "next/link";
 import {useForm} from "react-hook-form";
 import {
@@ -19,10 +19,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 import {BiErrorCircle} from "react-icons/bi";
-import {useRouter} from "next/router";
 
 import {AuthLayout} from "../../components/layouts";
 import {validations} from "../../utils";
+import {useErrorForm} from "../../hooks";
 
 type Providers = {
   [key: string]: {
@@ -52,16 +52,12 @@ const LoginPage: NextPage<Props> = ({providers}) => {
     formState: {errors},
   } = useForm<FormData>();
 
-  const [showError, setShowError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const error = router.query.error as string;
-
-    if (error === "CredentialsSignin") {
-      setShowError(true);
-    }
-  }, [router]);
+  const {isLoading, showError, errorMessage, setIsLoading, setShowError} = useErrorForm({
+    textError: "",
+    loading: false,
+    displayError: false,
+    queryErrors: true,
+  });
 
   const onLoginUser = async ({email, password}: FormData) => {
     setShowError(false);
@@ -85,7 +81,7 @@ const LoginPage: NextPage<Props> = ({providers}) => {
           <GridItem>
             <Tag colorScheme="red" display={showError ? "flex" : "none"} p={3} w="100%">
               <Icon as={BiErrorCircle} fontSize="lg" mr={1} />
-              Email o contraseña incorrectos
+              {errorMessage}
             </Tag>
           </GridItem>
 

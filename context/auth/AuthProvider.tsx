@@ -23,6 +23,15 @@ const AUTH_INITIAL_STATE: AuthState = {
 export const AuthProvider: FC<Props> = ({children}) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
 
+  /**
+   * Register the user by calling the /user/register endpoint and
+   * dispatch "Auth - Login"
+   * @param email - registration email
+   * @param password - registration password
+   * @param name - registration name
+   * @returns Promise that resolves to an object with
+   * hasError: boolean and message?: string
+   */
   const registerUser = async (
     email: string,
     password: string,
