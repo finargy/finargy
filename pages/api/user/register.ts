@@ -1,10 +1,11 @@
 import type {NextApiRequest, NextApiResponse} from "next";
 
-import bcrypt from "bcryptjs";
+import {hashSync} from "bcryptjs";
 
 import {db} from "../../../database";
 import {Currency, User} from "../../../models";
-import {validations} from "../../../utils";
+import {isValidEmail} from "../../../utils/validations";
+import {mailer} from "../../../utils/nodemailer";
 
 type Data =
   | {error?: any; message: string}
@@ -42,7 +43,7 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
     return res.status(400).json({message: "The name must have at least 2 characters"});
   }
 
-  if (!validations.isValidEmail(email)) {
+  if (!isValidEmail(email)) {
     return res.status(400).json({message: "The email is not valid"});
   }
 
@@ -59,7 +60,7 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
   const newUser = new User({
     name,
     email: email.toLocaleLowerCase(),
-    password: bcrypt.hashSync(password, 10),
+    password: hashSync(password, 10),
     role: "user",
     preferredCurrency: currency?._id,
   });
@@ -67,6 +68,18 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
   try {
     await newUser.save({validateBeforeSave: true});
     await db.disconnect();
+    // send verification email
+    await mailer.send(
+      "RegistrationEmail",
+      {
+        name: newUser.name,
+        brand: "Finargy",
+      },
+      {
+        to: newUser.email,
+        from: process.env.EMAIL_FROM,
+      },
+    );
   } catch (error) {
     await db.disconnect();
     // eslint-disable-next-line no-console

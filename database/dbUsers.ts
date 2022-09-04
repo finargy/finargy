@@ -22,7 +22,7 @@ export const checkUserEmailPassword = async (email: string = "", password: strin
 
   if (!bcrypt.compareSync(password, user.password!)) return null;
 
-  const {role, name, _id, preferredCurrency} = user;
+  const {role, name, _id, preferredCurrency, isVerified} = user;
 
   return {
     _id,
@@ -30,6 +30,7 @@ export const checkUserEmailPassword = async (email: string = "", password: strin
     name,
     role,
     preferredCurrency,
+    isVerified,
   };
 };
 
@@ -65,7 +66,7 @@ export const oAuthToDbUser = async (oAuthEmail: string, oAuthName: string) => {
   await newUser.save();
   await db.disconnect();
 
-  const {_id, name, email, role, preferredCurrency} = newUser;
+  const {_id, name, email, role, preferredCurrency, isVerified} = newUser;
 
   return {
     _id,
@@ -73,5 +74,6 @@ export const oAuthToDbUser = async (oAuthEmail: string, oAuthName: string) => {
     email,
     role,
     preferredCurrency,
+    isVerified,
   };
 };

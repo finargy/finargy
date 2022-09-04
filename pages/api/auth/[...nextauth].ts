@@ -34,7 +34,7 @@ export default NextAuth({
     newUser: "/auth/register",
   },
   session: {
-    maxAge: 86400, // 1 day
+    maxAge: 1296000, // 15 day
   },
   callbacks: {
     async session({session, token}) {
