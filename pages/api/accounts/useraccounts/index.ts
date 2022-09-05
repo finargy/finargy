@@ -34,10 +34,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       // /api/accounts/useraccounts/
       return postAccount(req, res);
     case "PUT":
-      if (req.query.disable) {
+      if (req.query.disable === "true") {
         // /api/accounts/useraccounts/:id/disable
         return disableAccount(req, res);
-      } else if (req.query.softDelete) {
+      } else if (req.query.softDelete === "true") {
         // /api/accounts/useraccounts/:id/softDelete
         return softDeleteAccount(req, res);
       }
@@ -80,6 +80,89 @@ const getAccount = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   try {
     const userAccount = await getUserAccountById(id);
+
+    if (!userAccount) {
+      return res.status(404).json({message: "User account not found"});
+    }
+
+    return res.status(200).json({data: userAccount});
+  } catch (error: any) {
+    //If an error occurs, return a 500
+    return res.status(500).json({error, message: "Internal server error"});
+  }
+};
+
+/**
+ * Updates a user account in the database.
+ * @param req The request object. Contains the id of the user account to update and the new values.
+ * @param res The response object. Contains the updated user account.
+ * @returns The updated user account.
+ */
+const putAccount = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const {id = ""} = req.query as {id: string};
+
+  const {name, icon, preferedCurrency, isActive, isDeleted} = req.body as IUserAccountEditables;
+
+  try {
+    const userAccount = await getUserAccountById(id);
+
+    if (!userAccount) {
+      return res.status(404).json({message: "User account not found"});
+    }
+
+    const updatedUserAccount = await updateUserAccountById(id, {
+      name,
+      icon,
+      preferedCurrency,
+      isActive,
+      isDeleted,
+    });
+
+    if (!updatedUserAccount) {
+      return res.status(500).json({message: "Internal server error"});
+    }
+
+    return res.status(200).json({data: updatedUserAccount});
+  } catch (error: any) {
+    //If an error occurs, return a 500
+    return res.status(500).json({error, message: "Internal server error"});
+  }
+};
+
+/**
+ * Disables a user account.
+ * @param req The request object. Contains the id of the user account to disable.
+ * @param res The response object. Contains the disabled user account.
+ * @returns The disabled user account.
+ */
+const disableAccount = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const {id = ""} = req.query as {id: string};
+
+  try {
+    const userAccount = await disableUserAccountById(id);
+
+    if (!userAccount) {
+      return res.status(404).json({message: "User account not found"});
+    }
+
+    return res.status(200).json({data: userAccount});
+  } catch (error: any) {
+    //If an error occurs, return a 500
+    return res.status(500).json({error, message: "Internal server error"});
+  }
+};
+
+/**
+ * Soft deletes a user account.
+ * @param req The request object. Contains the id of the user account to soft delete.
+ * @param res The response object. Contains the soft deleted user account.
+ * @returns The soft deleted user account.
+ */
+const softDeleteAccount = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const {id = ""} = req.query as {id: string};
+
+  try {
+    const userAccount = await softDeleteUserAccountById(id);
 
     if (!userAccount) {
       return res.status(404).json({message: "User account not found"});
