@@ -76,8 +76,14 @@ const getAllAccounts = async (res: NextApiResponse<Data>) => {
  * @returns The user account.
  */
 const getAccount = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const {id = ""} = req.query as {id: string};
+
   try {
-    const userAccount = await getUserAccountById(req.query.id as string);
+    const userAccount = await getUserAccountById(id);
+
+    if (!userAccount) {
+      return res.status(404).json({message: "User account not found"});
+    }
 
     return res.status(200).json({data: userAccount});
   } catch (error: any) {
@@ -93,10 +99,16 @@ const getAccount = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
  * @returns The user account.
  */
 const deleteAccount = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  try {
-    const userAccount = await hardDeleteUserAccountById(req.query.id as string);
+  const {id = ""} = req.query as {id: string};
 
-    return res.status(200).json({data: userAccount});
+  try {
+    const deletedAccount = await hardDeleteUserAccountById(id);
+
+    if (!deletedAccount) {
+      return res.status(404).json({message: "User account not found"});
+    }
+
+    return res.status(200).json({data: deletedAccount});
   } catch (error: any) {
     //If an error occurs, return a 500
     return res.status(500).json({error, message: "Internal server error"});
