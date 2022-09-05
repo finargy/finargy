@@ -15,3 +15,11 @@ export interface IUserAccount {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface IUserAccountEditables {
+  name: string;
+  icon: string;
+  preferedCurrency: string;
+  isActive: boolean;
+  isDeleted: boolean;
+}
