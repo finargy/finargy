@@ -17,9 +17,12 @@ export interface IUserAccount {
 }
 
 export interface IUserAccountEditables {
-  name: string;
-  icon: string;
-  preferedCurrency: string;
-  isActive: boolean;
-  isDeleted: boolean;
+  name?: string;
+  icon?: string;
+  preferedCurrency?: string;
+  totalIncome?: number;
+  totalExpense?: number;
+  totalBalance?: number;
+  isActive?: boolean;
+  isDeleted?: boolean;
 }

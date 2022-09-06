@@ -99,30 +99,47 @@ const getAccount = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
  * @returns The updated user account.
  */
 const putAccount = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const {id = ""} = req.query as {id: string};
+  const {id = "", ...editAccountDict} = req.body as {
+    id: string;
+    editAccountDict: IUserAccountEditables;
+  };
 
-  const {name, icon, preferedCurrency, isActive, isDeleted} = req.body as IUserAccountEditables;
+  const editableFields = [
+    "name",
+    "icon",
+    "preferedCurrency",
+    "totalIncome",
+    "totalExpense",
+    "totalBalance",
+  ];
+
+  if (id.length === 0) {
+    return res.status(400).json({message: "Missing account id"});
+  }
+
+  if (!editAccountDict) {
+    return res.status(400).json({message: "No fields to update"});
+  }
+
+  const invalidFields = Object.keys(editAccountDict).filter(
+    (field) => !editableFields.includes(field),
+  );
+
+  if (invalidFields.length > 0) {
+    return res.status(400).json({
+      error: true,
+      message: `Invalid fields: ${invalidFields.join(", ")}`,
+    });
+  }
 
   try {
-    const userAccount = await getUserAccountById(id);
+    const editedAccount = await updateUserAccountById(id, editAccountDict);
 
-    if (!userAccount) {
+    if (!editedAccount) {
       return res.status(404).json({message: "User account not found"});
     }
 
-    const updatedUserAccount = await updateUserAccountById(id, {
-      name,
-      icon,
-      preferedCurrency,
-      isActive,
-      isDeleted,
-    });
-
-    if (!updatedUserAccount) {
-      return res.status(500).json({message: "Internal server error"});
-    }
-
-    return res.status(200).json({data: updatedUserAccount});
+    return res.status(200).json({data: editedAccount});
   } catch (error: any) {
     //If an error occurs, return a 500
     return res.status(500).json({error, message: "Internal server error"});

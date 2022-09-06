@@ -83,15 +83,15 @@ export const updateUserAccountById = async (
 
   await db.connect();
 
-  const account = await UserAccount.findByIdAndUpdate(id, accountProps, {
+  const editedAccount = await UserAccount.findByIdAndUpdate(id, accountProps, {
     new: true,
   }).lean();
 
   await db.disconnect();
 
-  if (!account) return null;
+  if (!editedAccount) return null;
 
-  return account;
+  return editedAccount;
 };
 
 /**
