@@ -1,9 +1,49 @@
 import bcrypt from "bcryptjs";
+import {isValidObjectId} from "mongoose";
 
 import {Currency, User} from "../models";
 import {UserRole} from "../models/User";
+import {IUser, IUserEditables} from "../interfaces";
 
 import {db} from ".";
+
+/**
+ * "Get a user by their id."
+ *
+ * @param {string} id - string - The id of the user we want to get.
+ * @returns An object with the user or null.
+ */
+export const getUserById = async (id: string): Promise<IUser | null> => {
+  if (!isValidObjectId(id)) return null;
+  await db.connect();
+  const user = await User.findById(id).lean();
+
+  await db.disconnect();
+  if (!user) return null;
+
+  return user;
+};
+
+/**
+ * It takes in a user id and an object of properties to update, and returns the updated user
+ * @param {String} id - The id of the user to update.
+ * @param {IUserEditables} modifiedProps - IUserEditables
+ * @returns A promise that resolves to an updated user object or null.
+ */
+export const updateUserById = async (
+  id: String,
+  modifiedProps: IUserEditables,
+): Promise<IUser | null> => {
+  if (!isValidObjectId(id)) return null;
+  await db.connect();
+
+  const updatedUser = await User.findByIdAndUpdate(id, modifiedProps, {new: true}).lean();
+
+  await db.disconnect();
+  if (!updatedUser) return null;
+
+  return updatedUser;
+};
 
 /**
  * It checks if the user exists in the database and if the password is correct

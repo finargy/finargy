@@ -14,10 +14,10 @@ export interface IAccountTransaction {
 }
 
 export interface IAccountTransactionEditables {
-  title: string;
-  description: string;
-  category: string;
-  type: string;
-  amount: number;
-  date: Date;
+  title?: string;
+  description?: string;
+  category?: string;
+  type?: string;
+  amount?: number;
+  date?: Date;
 }
