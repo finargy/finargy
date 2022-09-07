@@ -25,6 +25,22 @@ export const getUserById = async (id: string): Promise<IUser | null> => {
 };
 
 /**
+ * "Get a user by their email address."
+ *
+ * @param {string} email - string - the email of the user we want to find
+ * @returns A promise that resolves to an IUser or null.
+ */
+export const getUserByEmail = async (email: string): Promise<IUser | null> => {
+  await db.connect();
+  const user = await User.findOne({email}).lean();
+
+  await db.disconnect();
+  if (!user) return null;
+
+  return user;
+};
+
+/**
  * It takes in a user id and an object of properties to update, and returns the updated user
  * @param {String} id - The id of the user to update.
  * @param {IUserEditables} modifiedProps - IUserEditables

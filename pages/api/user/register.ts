@@ -4,10 +4,10 @@ import {hashSync} from "bcryptjs";
 
 import {db} from "../../../database";
 import {Currency, User} from "../../../models";
-import {isValidEmail} from "../../../utils/validations";
 import {mailer} from "../../../utils/nodemailer";
 import {createUserValidation} from "../../../database/dbUserValidation";
-import {get32BitRandomValue} from "../../../utils";
+import {isValidEmail} from "../../../utils/validations";
+import {get32BitRandomValue, getDateNowPlusHours} from "../../../utils";
 
 type Data =
   | {error?: any; message: string}
@@ -72,9 +72,7 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
     await db.disconnect();
 
     const token = get32BitRandomValue();
-    const expirationDate = new Date();
-
-    expirationDate.setHours(expirationDate.getHours() + 24);
+    const expirationDate = getDateNowPlusHours(24);
     const userValidation = await createUserValidation(newUser._id, token, expirationDate);
 
     // send verification email
@@ -83,7 +81,7 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
       {
         name: newUser.name,
         brand: "Finargy",
-        verificationUrl: `${process.env.HOST_URL}/auth/verification?token=${userValidation?.token}`,
+        verificationUrl: `${process.env.HOST_URL}/auth/verification?token=${userValidation?.token}&email=${newUser.email}`,
       },
       {
         to: newUser.email,
