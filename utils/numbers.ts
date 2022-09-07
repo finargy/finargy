@@ -1,5 +1,9 @@
 import crypto from "crypto";
 
-export const get32BitRandomValue = (): string => {
+/**
+ * It generates a random 32 digit token
+ * @returns A string of 32 digits
+ */
+export const get32DigitsToken = (): string => {
   return crypto.webcrypto.randomUUID().split("-").join("");
 };

@@ -7,7 +7,7 @@ import {Currency, User} from "../../../models";
 import {mailer} from "../../../utils/nodemailer";
 import {createUserValidation} from "../../../database/dbUserValidation";
 import {isValidEmail} from "../../../utils/validations";
-import {get32BitRandomValue, getDateNowPlusHours} from "../../../utils";
+import {get32DigitsToken, getDateNowPlusHours} from "../../../utils";
 
 type Data =
   | {error?: any; message: string}
@@ -71,7 +71,7 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
     await newUser.save({validateBeforeSave: true});
     await db.disconnect();
 
-    const token = get32BitRandomValue();
+    const token = get32DigitsToken();
     const expirationDate = getDateNowPlusHours(24);
     const userValidation = await createUserValidation(newUser._id, token, expirationDate);
 

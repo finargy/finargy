@@ -5,7 +5,7 @@ import {getToken} from "next-auth/jwt";
 
 import {dbUsers, dbUserValidation} from "../../database";
 import {AuthLayout} from "../../components/layouts";
-import {get32BitRandomValue, getDateNowPlusHours} from "../../utils";
+import {get32DigitsToken, getDateNowPlusHours} from "../../utils";
 import {mailer} from "../../utils/nodemailer";
 
 type Props = {
@@ -17,7 +17,7 @@ const VerificationPage: NextPage<Props> = ({validation, message}) => {
   return (
     <AuthLayout title="Verificación">
       <Box>
-        <Text>Verificacion: {validation ? "Correcta" : "Eror"}</Text>
+        <Text>Verificacion: {validation ? "Correcta" : "Error"}</Text>
         <Text>Mensaje: {message}</Text>
       </Box>
     </AuthLayout>
@@ -33,8 +33,12 @@ export const getServerSideProps: GetServerSideProps = async ({req, query}) => {
   const {token, email} = query as {token: string; email: string};
   const session: any = await getToken({req});
 
-  // TODO: extraer la logica
+  const res = await checkUserValidation(token, email, session);
 
+  return res;
+};
+
+const checkUserValidation = async (token: string, email: string, session: any) => {
   // check if user is logged in and already verified
   if (session?.user.isVerified) {
     return {
@@ -80,7 +84,7 @@ export const getServerSideProps: GetServerSideProps = async ({req, query}) => {
   const expirationDate = new Date(userValidation?.expiration!).getTime();
 
   if (dateNow > expirationDate) {
-    const token = get32BitRandomValue();
+    const token = get32DigitsToken();
     const expiration = getDateNowPlusHours(24);
     const newUserValidation = await dbUserValidation.createUserValidation(
       user._id,
