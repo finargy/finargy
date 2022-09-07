@@ -12,16 +12,16 @@ const DashboardPage = () => {
     >
       <HStack backgroundColor="blackAlpha.100" gap={2} p={10}>
         <BalanceWidget
-          date={new Date()}
-          expense={1231.21}
-          incoming={234.23}
+          date="12/06/2022"
+          expense={2123122}
+          incoming={2203130}
           symbol="$"
           title="Februery Expenses"
         />
         <BalanceWidget
-          date={new Date()}
-          expense={150}
-          incoming={100}
+          date="12/06/2022"
+          expense={1502}
+          incoming={1003}
           symbol="$"
           title="Berlin Congress"
         />

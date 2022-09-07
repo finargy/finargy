@@ -1,7 +1,7 @@
+import {FC, useMemo} from "react";
 import {
   Box,
-  CircularProgress,
-  CircularProgressLabel,
+  Center,
   Grid,
   GridItem,
   HStack,
@@ -13,22 +13,46 @@ import {
   MenuList,
   Stack,
   Text,
+  VStack,
 } from "@chakra-ui/react";
-import {FC} from "react";
+import {Doughnut} from "react-chartjs-2";
+import {Chart as ChartJS, ArcElement, Tooltip, Legend} from "chart.js";
 import {BsThreeDotsVertical} from "react-icons/bs";
 import {FaMinus} from "react-icons/fa";
+
+import {abbreviateNumber} from "../../utils";
+
+// ? Para que se usa?
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 type Props = {
   title: string;
   expense: number;
   incoming: number;
-  date: Date | string;
+  date: string;
   symbol: string;
 };
 
 export const BalanceWidget: FC<Props> = ({title, expense, incoming, date, symbol}) => {
+  const data = useMemo(
+    () => ({
+      labels: ["Ingresos", "Gastos"],
+      datasets: [
+        {
+          data: [incoming, expense],
+          backgroundColor: ["rgba(255, 194, 51, 0.2)", "rgba(54, 162, 235, 0.2)"],
+          borderColor: ["rgba(255, 179, 0, 1)", "rgba(54, 162, 235, 1)"],
+          borderWidth: 1,
+          radius: 75,
+          hoverOffset: 4,
+        },
+      ],
+    }),
+    [expense, incoming],
+  );
+
   return (
-    <Box backgroundColor="white" borderRadius="15px" boxShadow="lg" p={2} w="300px">
+    <Box backgroundColor="white" borderRadius="15px" boxShadow="lg" maxH="250px" maxW="300px" p={2}>
       <Stack
         alignItems="center"
         backgroundColor="blackAlpha.100"
@@ -59,24 +83,27 @@ export const BalanceWidget: FC<Props> = ({title, expense, incoming, date, symbol
         </Menu>
       </Stack>
       <Grid templateColumns="repeat(3, 1fr)" templateRows="repeat(3, 1fr)">
-        <GridItem colSpan={2} pl={2} rowSpan={3}>
-          <CircularProgress
-            color="orange.300"
-            p={2}
-            size="130px"
-            thickness="4px"
-            trackColor="blue.500"
-            value={(incoming * 100) / (incoming + expense)}
-          >
-            <CircularProgressLabel>
+        <GridItem colSpan={2} position="relative" rowSpan={3}>
+          <Center>
+            <Doughnut
+              data={data}
+              height="200px"
+              options={{
+                cutout: 80,
+                plugins: {legend: {display: false}},
+                responsive: true,
+                maintainAspectRatio: false,
+              }}
+            />
+            <VStack color="blackAlpha.500" fontSize="sm" position="absolute">
               <Text color="blackAlpha.500" fontSize="sm">
                 Total
               </Text>
               <Text color="blackAlpha.600" fontSize="md" fontWeight="bold">
                 {symbol} {incoming - expense}
               </Text>
-            </CircularProgressLabel>
-          </CircularProgress>
+            </VStack>
+          </Center>
         </GridItem>
         <GridItem
           alignItems="end"
@@ -87,34 +114,47 @@ export const BalanceWidget: FC<Props> = ({title, expense, incoming, date, symbol
           pr={4}
           rowSpan={3}
         >
-          <Text color="blackAlpha.600" fontSize="sm" fontWeight="bold">
+          <Text
+            alignItems="center"
+            color="blackAlpha.600"
+            display="flex"
+            fontSize="sm"
+            fontWeight="bold"
+          >
+            <Icon as={FaMinus} color="blue.500" mr={1} />
             Gastos
           </Text>
           <HStack>
-            <Icon as={FaMinus} color="blue.500" />
             <Text fontSize="sm" fontWeight="bold">
               {symbol}
             </Text>
             <Text fontSize="sm" fontWeight="bold">
-              {expense}
+              {expense < 1000000 ? expense : abbreviateNumber(expense, 2)}
             </Text>
           </HStack>
 
-          <Text color="blackAlpha.600" fontSize="sm" fontWeight="bold" mt={1}>
+          <Text
+            alignItems="center"
+            color="blackAlpha.600"
+            display="flex"
+            fontSize="sm"
+            fontWeight="bold"
+            mt={1}
+          >
+            <Icon as={FaMinus} color="orange.300" mr={1} />
             Ingresos
           </Text>
           <HStack>
-            <Icon as={FaMinus} color="orange.300" />
             <Text fontSize="sm" fontWeight="bold">
               {symbol}
             </Text>
             <Text fontSize="sm" fontWeight="bold">
-              {incoming}
+              {incoming < 1000000 ? incoming : abbreviateNumber(incoming, 2)}
             </Text>
           </HStack>
 
           <Text color="blackAlpha.600" fontSize="sm" fontWeight="bold" mt={2}>
-            {new Date(date).toLocaleDateString()}
+            {date}
           </Text>
         </GridItem>
       </Grid>
