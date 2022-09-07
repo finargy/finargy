@@ -3,6 +3,7 @@ import Head from "next/head";
 import {FC, ReactNode} from "react";
 
 import {Navbar} from "../ui";
+import {Sidebar} from "../ui";
 
 interface Props {
   children: ReactNode;
@@ -27,7 +28,8 @@ export const MainLayout: FC<Props> = ({children, title, pageDescription, imageFu
       </Head>
 
       <nav>
-        <Navbar />
+        {/* <Navbar /> */}
+        <Sidebar />
       </nav>
 
       <main>
