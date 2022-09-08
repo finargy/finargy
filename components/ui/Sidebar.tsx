@@ -121,13 +121,13 @@ const NavItem = ({icon, href, children, ...rest}: NavItemProps) => {
       {/* <Link _focus={{boxShadow: "none"}} href={href} style={{textDecoration: "none"}}> */}
       <Flex
         _hover={{
-          bg: isSelected ? "#edf2f7" : "white",
-          color: "purple.400",
+          bg: isSelected ? "#edf2f7" : "purple.300",
+          // color: "purple.400",
         }}
         align="center"
-        bg={isSelected ? "#edf2f7" : "purple.400"}
-        borderLeftRadius="lg"
-        borderRightRadius={isSelected ? "revert" : "lg"}
+        bg={isSelected ? "#edf2f7" : "purple.500"}
+        borderLeftRadius="30px"
+        borderRightRadius={isSelected ? "revert" : "30px"}
         color={isSelected ? "purple.400" : "white"}
         cursor="pointer"
         fontWeight={isSelected ? "bold" : "semibold"}
@@ -136,13 +136,13 @@ const NavItem = ({icon, href, children, ...rest}: NavItemProps) => {
         marginRight={isSelected ? "0" : "4"}
         p="4"
         role="group"
-        transition="all 0.2s"
+        transition="all 0.35s"
         {...rest}
       >
         {icon && (
           <Icon
             _groupHover={{
-              color: "purple.400",
+              color: isSelected ? "purple.400" : "white",
             }}
             as={icon}
             fontSize="16"
