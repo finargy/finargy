@@ -1,28 +1,17 @@
 import React, {createContext, useContext} from "react";
-import {
-  Box,
-  Flex,
-  Icon,
-  useColorModeValue,
-  Link,
-  Drawer,
-  DrawerContent,
-  Text,
-  useDisclosure,
-  BoxProps,
-  FlexProps,
-} from "@chakra-ui/react";
+import {Box, Flex, Icon, useColorModeValue, Link, Text, FlexProps} from "@chakra-ui/react";
 import {MdSpaceDashboard} from "react-icons/md";
 import {FaMoneyBillWave} from "react-icons/fa";
 import {GiBackwardTime} from "react-icons/gi";
 import {BsFillPiggyBankFill} from "react-icons/bs";
 import {BiCalendarCheck} from "react-icons/bi";
 import {IconType} from "react-icons";
+import {AiFillCaretLeft, AiFillCaretRight} from "react-icons/ai";
 
 interface LinkItemProps {
-  name: string;
   icon: IconType;
   href: string;
+  name: String;
 }
 
 const LinkItems: Array<LinkItemProps> = [
@@ -35,7 +24,13 @@ const LinkItems: Array<LinkItemProps> = [
 
 const SidebarContext = createContext({});
 
-export const Sidebar = () => {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onOpen: () => void;
+}
+
+export const Sidebar = ({isOpen, onClose, onOpen}: SidebarProps) => {
   const [selectedOption, setSelectedOption] = React.useState("Dashboard");
 
   return (
@@ -46,32 +41,45 @@ export const Sidebar = () => {
         borderRightColor={useColorModeValue("white", "white")}
         h="full"
         pos="fixed"
-        w={{base: "full", md: 60}}
+        transition="all 0.3s"
+        w={{md: isOpen ? 60 : 20}}
       >
-        <Flex alignItems="center" h="20" justifyContent="space-between" mx="8">
+        <Flex alignItems="center" h="20" justifyContent="space-between" mx="4">
           <Text color="white" fontFamily="monospace" fontSize="3xl" fontWeight="bold">
-            finArgy
+            {isOpen ? "finArgy" : "fA"}
           </Text>
+          <Icon
+            as={isOpen ? AiFillCaretLeft : AiFillCaretRight}
+            color="white"
+            cursor="pointer"
+            fontSize="2xl"
+            onClick={isOpen ? onClose : onOpen}
+          />
         </Flex>
-        {LinkItems.map((link) => (
-          <NavItem key={link.name} href={link.href} icon={link.icon}>
-            {link.name}
-          </NavItem>
+        {LinkItems.map((link, index) => (
+          <FullWidthItem
+            key={index}
+            href={link.href}
+            icon={link.icon}
+            isOpen={isOpen}
+            name={link.name}
+          />
         ))}
       </Box>
     </SidebarContext.Provider>
   );
 };
 
-interface NavItemProps extends FlexProps {
+interface FullWidthItemProps extends FlexProps {
   icon: IconType;
   href: string;
-  children: String;
+  name: String;
+  isOpen: boolean;
 }
-const NavItem = ({icon, href, children, ...rest}: NavItemProps) => {
+const FullWidthItem = ({icon, href, name, isOpen, ...rest}: FullWidthItemProps) => {
   const {selectedOption, setSelectedOption} = useContext(SidebarContext);
 
-  const isSelected = selectedOption === children;
+  const isSelected = selectedOption === name;
 
   return (
     <Link
@@ -79,7 +87,7 @@ const NavItem = ({icon, href, children, ...rest}: NavItemProps) => {
       href="#"
       style={{textDecoration: "none"}}
       onClick={() => {
-        setSelectedOption(children);
+        setSelectedOption(name);
         console.log("reditecting to " + href);
       }}
     >
@@ -111,10 +119,11 @@ const NavItem = ({icon, href, children, ...rest}: NavItemProps) => {
             }}
             as={icon}
             fontSize="16"
+            h={6}
             mr="4"
           />
         )}
-        {children}
+        {isOpen && <Text>{name}</Text>}
       </Flex>
     </Link>
   );
