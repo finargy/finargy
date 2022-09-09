@@ -26,11 +26,14 @@ export const MainLayout: FC<Props> = ({children, title, pageDescription, imageFu
 
         {imageFullUrl && <meta content={imageFullUrl} name="og:image" />}
       </Head>
+      {/* Sidebar */}
+      <Sidebar />
 
-      <nav>
-        {/* <Navbar /> */}
-        <Sidebar />
-      </nav>
+      {/* Main content */}
+      <Box ml={{base: 0, md: 60}} w="full">
+        HOLA
+      </Box>
+      <nav>{/* <Navbar /> */}</nav>
 
       <main>
         <Box pt={{base: "0", sm: "80px"}}>{children}</Box>

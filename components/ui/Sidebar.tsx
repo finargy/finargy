@@ -37,46 +37,29 @@ const SidebarContext = createContext({});
 
 export const Sidebar = () => {
   const [selectedOption, setSelectedOption] = React.useState("Dashboard");
-  const {isOpen} = useDisclosure();
 
   return (
     <SidebarContext.Provider value={{selectedOption, setSelectedOption}}>
-      <Box bg={useColorModeValue("gray.100", "gray.900")} minH="100vh">
-        <SidebarContent display={{base: "none", md: "block"}} />
-        <Drawer autoFocus={false} isOpen={isOpen} placement="left" size="full" onClose={() => {}}>
-          <DrawerContent>
-            <SidebarContent />
-          </DrawerContent>
-        </Drawer>
+      <Box
+        bg={useColorModeValue("purple.400", "gray.900")}
+        borderRight="1px"
+        borderRightColor={useColorModeValue("#edf2f7", "#edf2f7")}
+        h="full"
+        pos="fixed"
+        w={{base: "full", md: 60}}
+      >
+        <Flex alignItems="center" h="20" justifyContent="space-between" mx="8">
+          <Text color="white" fontFamily="monospace" fontSize="3xl" fontWeight="bold">
+            finArgy
+          </Text>
+        </Flex>
+        {LinkItems.map((link) => (
+          <NavItem key={link.name} href={link.href} icon={link.icon}>
+            {link.name}
+          </NavItem>
+        ))}
       </Box>
     </SidebarContext.Provider>
-  );
-};
-
-interface SidebarProps extends BoxProps {}
-
-const SidebarContent = ({...rest}: SidebarProps) => {
-  return (
-    <Box
-      bg={useColorModeValue("purple.400", "gray.900")}
-      borderRight="1px"
-      borderRightColor={useColorModeValue("#edf2f7", "#edf2f7")}
-      h="full"
-      pos="fixed"
-      w={{base: "full", md: 60}}
-      {...rest}
-    >
-      <Flex alignItems="center" h="20" justifyContent="space-between" mx="8">
-        <Text color="white" fontFamily="monospace" fontSize="3xl" fontWeight="bold">
-          finArgy
-        </Text>
-      </Flex>
-      {LinkItems.map((link) => (
-        <NavItem key={link.name} href={link.href} icon={link.icon}>
-          {link.name}
-        </NavItem>
-      ))}
-    </Box>
   );
 };
 
