@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const MainLayout: FC<Props> = ({children, title, pageDescription, imageFullUrl}) => {
-  const {isOpen, onOpen, onClose} = useDisclosure();
+  const {isOpen: sidebarIsFullWidth, onOpen, onClose} = useDisclosure();
 
   return (
     <>
@@ -31,10 +31,10 @@ export const MainLayout: FC<Props> = ({children, title, pageDescription, imageFu
       </Head>
 
       {/* Sidebar */}
-      <Sidebar isOpen={isOpen} onClose={onClose} onOpen={onOpen} />
+      <Sidebar sidebarIsFullWidth={sidebarIsFullWidth} onClose={onClose} onOpen={onOpen} />
 
       {/* Main content */}
-      <Box ml={{base: 0, md: isOpen ? 60 : 20}} transition="all 0.3s">
+      <Box ml={{base: 0, md: sidebarIsFullWidth ? 60 : 20}} transition="all 0.3s">
         Lorem Ipsum
       </Box>
 

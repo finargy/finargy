@@ -28,19 +28,19 @@ const LinkItems: Array<LinkItemProps> = [
 const SidebarContext = createContext({});
 
 interface SidebarProps {
-  isOpen: boolean;
+  sidebarIsFullWidth: boolean;
   onClose: () => void;
   onOpen: () => void;
 }
 
 /**
  * Sidebar component. Shows a sidebar with links to the main pages of the app.
- * @param isOpen - Whether the sidebar is open or not.
+ * @param sidebarIsFullWidth - Whether the sidebar is open or not.
  * @param onClose - Function to close the sidebar.
  * @param onOpen - Function to open the sidebar.
  * @returns {JSX.Element} Sidebar component
  */
-export const Sidebar = ({isOpen, onClose, onOpen}: SidebarProps) => {
+export const Sidebar = ({sidebarIsFullWidth, onClose, onOpen}: SidebarProps) => {
   const [selectedOption, setSelectedOption] = React.useState("Dashboard");
 
   return (
@@ -52,18 +52,18 @@ export const Sidebar = ({isOpen, onClose, onOpen}: SidebarProps) => {
         h="full"
         pos="fixed"
         transition="all 0.3s"
-        w={{md: isOpen ? 60 : 20}}
+        w={{md: sidebarIsFullWidth ? 60 : 20}}
       >
         <Flex alignItems="center" h="20" justifyContent="space-between" mx="4">
           <Text color="white" fontFamily="monospace" fontSize="3xl" fontWeight="bold">
-            {isOpen ? "finArgy" : "fA"}
+            {sidebarIsFullWidth ? "finArgy" : "fA"}
           </Text>
           <Icon
-            as={isOpen ? AiFillCaretLeft : AiFillCaretRight}
+            as={sidebarIsFullWidth ? AiFillCaretLeft : AiFillCaretRight}
             color="white"
             cursor="pointer"
             fontSize="2xl"
-            onClick={isOpen ? onClose : onOpen}
+            onClick={sidebarIsFullWidth ? onClose : onOpen}
           />
         </Flex>
         {LinkItems.map((link, index) => (
@@ -71,8 +71,8 @@ export const Sidebar = ({isOpen, onClose, onOpen}: SidebarProps) => {
             key={index}
             href={link.href}
             icon={link.icon}
-            isOpen={isOpen}
             name={link.name}
+            sidebarIsFullWidth={sidebarIsFullWidth}
           />
         ))}
       </Box>
@@ -84,17 +84,17 @@ interface FullWidthItemProps extends FlexProps {
   icon: IconType;
   href: string;
   name: String;
-  isOpen: boolean;
+  sidebarIsFullWidth: boolean;
 }
 /**
  * FullWidthItem component. Shows a link to a page in the sidebar.
  * @param icon - Icon to show in the sidebar.
  * @param href - Link to the page.
  * @param name - Name of the page.
- * @param isOpen - Whether the sidebar is open or not.
+ * @param sidebarIsFullWidth - Whether the sidebar is open or not.
  * @returns {JSX.Element} Sidebar component
  */
-const FullWidthItem = ({icon, href, name, isOpen, ...rest}: FullWidthItemProps) => {
+const FullWidthItem = ({icon, href, name, sidebarIsFullWidth, ...rest}: FullWidthItemProps) => {
   //Handle selected option state
   const {selectedOption, setSelectedOption} = useContext(SidebarContext);
 
@@ -143,7 +143,7 @@ const FullWidthItem = ({icon, href, name, isOpen, ...rest}: FullWidthItemProps) 
             mr="4"
           />
         )}
-        {isOpen && <Text>{name}</Text>}
+        {sidebarIsFullWidth && <Text>{name}</Text>}
       </Flex>
     </Link>
   );
