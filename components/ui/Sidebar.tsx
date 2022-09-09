@@ -14,6 +14,9 @@ interface LinkItemProps {
   name: String;
 }
 
+/**
+ * Array of links to be displayed in the sidebar
+ */
 const LinkItems: Array<LinkItemProps> = [
   {name: "Dashboard", icon: MdSpaceDashboard, href: "/dashboard"},
   {name: "Billeteras", icon: FaMoneyBillWave, href: "/wallets"},
@@ -30,6 +33,13 @@ interface SidebarProps {
   onOpen: () => void;
 }
 
+/**
+ * Sidebar component. Shows a sidebar with links to the main pages of the app.
+ * @param isOpen - Whether the sidebar is open or not.
+ * @param onClose - Function to close the sidebar.
+ * @param onOpen - Function to open the sidebar.
+ * @returns {JSX.Element} Sidebar component
+ */
 export const Sidebar = ({isOpen, onClose, onOpen}: SidebarProps) => {
   const [selectedOption, setSelectedOption] = React.useState("Dashboard");
 
@@ -76,9 +86,19 @@ interface FullWidthItemProps extends FlexProps {
   name: String;
   isOpen: boolean;
 }
+/**
+ * FullWidthItem component. Shows a link to a page in the sidebar.
+ * @param icon - Icon to show in the sidebar.
+ * @param href - Link to the page.
+ * @param name - Name of the page.
+ * @param isOpen - Whether the sidebar is open or not.
+ * @returns {JSX.Element} Sidebar component
+ */
 const FullWidthItem = ({icon, href, name, isOpen, ...rest}: FullWidthItemProps) => {
+  //Handle selected option state
   const {selectedOption, setSelectedOption} = useContext(SidebarContext);
 
+  //Boolean to check if the item is selected
   const isSelected = selectedOption === name;
 
   return (
@@ -91,7 +111,6 @@ const FullWidthItem = ({icon, href, name, isOpen, ...rest}: FullWidthItemProps) 
         console.log("reditecting to " + href);
       }}
     >
-      {/* <Link _focus={{boxShadow: "none"}} href={href} style={{textDecoration: "none"}}> */}
       <Flex
         _hover={{
           bg: isSelected ? "white" : "purple.300",
@@ -103,7 +122,7 @@ const FullWidthItem = ({icon, href, name, isOpen, ...rest}: FullWidthItemProps) 
         borderRightRadius={isSelected ? "revert" : "30px"}
         color={isSelected ? "purple.400" : "white"}
         cursor="pointer"
-        fontWeight={isSelected ? "bold" : "semibold"}
+        fontWeight="bold"
         marginBottom="1"
         marginLeft="4"
         marginRight={isSelected ? "0" : "4"}
@@ -119,6 +138,7 @@ const FullWidthItem = ({icon, href, name, isOpen, ...rest}: FullWidthItemProps) 
             }}
             as={icon}
             fontSize="16"
+            fontWeight="bold"
             h={6}
             mr="4"
           />

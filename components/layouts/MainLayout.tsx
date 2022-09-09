@@ -29,14 +29,16 @@ export const MainLayout: FC<Props> = ({children, title, pageDescription, imageFu
 
         {imageFullUrl && <meta content={imageFullUrl} name="og:image" />}
       </Head>
+
       {/* Sidebar */}
       <Sidebar isOpen={isOpen} onClose={onClose} onOpen={onOpen} />
 
       {/* Main content */}
       <Box ml={{base: 0, md: isOpen ? 60 : 20}} transition="all 0.3s">
-        HOLA KE TAL TU COMO ESTAS
+        Lorem Ipsum
       </Box>
-      <nav>{/* <Navbar /> */}</nav>
+
+      {/* <nav> <Navbar /> </nav> */}
 
       <main>
         <Box pt={{base: "0", sm: "80px"}}>{children}</Box>
