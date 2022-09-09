@@ -34,7 +34,7 @@ export const MainLayout: FC<Props> = ({children, title, pageDescription, imageFu
 
       {/* Main content */}
       <Box ml={{base: 0, md: isOpen ? 60 : 20}} transition="all 0.3s">
-        HOLA KE TAL TU COMO ESTAS
+        Lorem Ipsum
       </Box>
       <nav>{/* <Navbar /> */}</nav>
 
