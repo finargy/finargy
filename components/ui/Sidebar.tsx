@@ -1,8 +1,6 @@
-import React, {ReactNode, createContext, useContext} from "react";
+import React, {createContext, useContext} from "react";
 import {
-  IconButton,
   Box,
-  CloseButton,
   Flex,
   Icon,
   useColorModeValue,
@@ -37,42 +35,27 @@ const LinkItems: Array<LinkItemProps> = [
 
 const SidebarContext = createContext({});
 
-export const Sidebar = ({children}: {children: ReactNode}) => {
-  const {isOpen, onOpen, onClose} = useDisclosure();
+export const Sidebar = () => {
   const [selectedOption, setSelectedOption] = React.useState("Dashboard");
+  const {isOpen} = useDisclosure();
 
   return (
     <SidebarContext.Provider value={{selectedOption, setSelectedOption}}>
       <Box bg={useColorModeValue("gray.100", "gray.900")} minH="100vh">
-        <SidebarContent display={{base: "none", md: "block"}} onClose={() => onClose} />
-        <Drawer
-          autoFocus={false}
-          isOpen={isOpen}
-          placement="left"
-          returnFocusOnClose={false}
-          size="full"
-          onClose={onClose}
-          onOverlayClick={onClose}
-        >
+        <SidebarContent display={{base: "none", md: "block"}} />
+        <Drawer autoFocus={false} isOpen={isOpen} placement="left" size="full" onClose={() => {}}>
           <DrawerContent>
-            <SidebarContent onClose={onClose} />
+            <SidebarContent />
           </DrawerContent>
         </Drawer>
-        {/* mobilenav */}
-        <MobileNav display={{base: "flex", md: "none"}} onOpen={onOpen} />
-        <Box ml={{base: 0, md: 60}} p="4">
-          {children}
-        </Box>
       </Box>
     </SidebarContext.Provider>
   );
 };
 
-interface SidebarProps extends BoxProps {
-  onClose: () => void;
-}
+interface SidebarProps extends BoxProps {}
 
-const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
+const SidebarContent = ({...rest}: SidebarProps) => {
   return (
     <Box
       bg={useColorModeValue("purple.400", "gray.900")}
@@ -87,7 +70,6 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
         <Text color="white" fontFamily="monospace" fontSize="3xl" fontWeight="bold">
           finArgy
         </Text>
-        <CloseButton display={{base: "flex", md: "none"}} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
         <NavItem key={link.name} href={link.href} icon={link.icon}>
@@ -152,35 +134,5 @@ const NavItem = ({icon, href, children, ...rest}: NavItemProps) => {
         {children}
       </Flex>
     </Link>
-  );
-};
-
-interface MobileProps extends FlexProps {
-  onOpen: () => void;
-}
-const MobileNav = ({onOpen, ...rest}: MobileProps) => {
-  return (
-    <Flex
-      alignItems="center"
-      bg={useColorModeValue("white", "gray.900")}
-      borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-      borderBottomWidth="1px"
-      height="20"
-      justifyContent="flex-start"
-      ml={{base: 0, md: 60}}
-      px={{base: 4, md: 24}}
-      {...rest}
-    >
-      <IconButton
-        aria-label="open menu"
-        icon={<MdSpaceDashboard />}
-        variant="outline"
-        onClick={onOpen}
-      />
-
-      <Text fontFamily="monospace" fontSize="2xl" fontWeight="bold" ml="8">
-        Logo
-      </Text>
-    </Flex>
   );
 };
