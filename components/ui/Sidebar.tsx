@@ -43,7 +43,7 @@ export const Sidebar = () => {
       <Box
         bg={useColorModeValue("purple.400", "gray.900")}
         borderRight="1px"
-        borderRightColor={useColorModeValue("#edf2f7", "#edf2f7")}
+        borderRightColor={useColorModeValue("white", "white")}
         h="full"
         pos="fixed"
         w={{base: "full", md: 60}}
@@ -86,11 +86,11 @@ const NavItem = ({icon, href, children, ...rest}: NavItemProps) => {
       {/* <Link _focus={{boxShadow: "none"}} href={href} style={{textDecoration: "none"}}> */}
       <Flex
         _hover={{
-          bg: isSelected ? "#edf2f7" : "purple.300",
+          bg: isSelected ? "white" : "purple.300",
           // color: "purple.400",
         }}
         align="center"
-        bg={isSelected ? "#edf2f7" : "purple.500"}
+        bg={isSelected ? "white" : "purple.500"}
         borderLeftRadius="30px"
         borderRightRadius={isSelected ? "revert" : "30px"}
         color={isSelected ? "purple.400" : "white"}
