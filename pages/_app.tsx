@@ -4,6 +4,7 @@ import {SessionProvider} from "next-auth/react";
 import {ChakraProvider} from "@chakra-ui/react";
 
 import {AuthProvider} from "../context/auth";
+import {UIProvider} from "../context/ui";
 import {theme} from "../theme";
 import "../styles/globals.css";
 
@@ -11,9 +12,11 @@ function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps) {
   return (
     <SessionProvider session={session}>
       <AuthProvider>
-        <ChakraProvider theme={theme}>
-          <Component {...pageProps} />
-        </ChakraProvider>
+        <UIProvider>
+          <ChakraProvider theme={theme}>
+            <Component {...pageProps} />
+          </ChakraProvider>
+        </UIProvider>
       </AuthProvider>
     </SessionProvider>
   );
