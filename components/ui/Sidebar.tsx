@@ -1,12 +1,16 @@
-import React, {createContext, useContext} from "react";
-import {Box, Flex, Icon, useColorModeValue, Link, Text, FlexProps} from "@chakra-ui/react";
+import {useContext} from "react";
+import {Box, Flex, Icon, Text, FlexProps, Link} from "@chakra-ui/react";
+import NextLink from "next/link";
 import {MdSpaceDashboard} from "react-icons/md";
 import {FaMoneyBillWave} from "react-icons/fa";
 import {GiBackwardTime} from "react-icons/gi";
 import {BsFillPiggyBankFill} from "react-icons/bs";
 import {BiCalendarCheck} from "react-icons/bi";
-import {IconType} from "react-icons";
 import {AiFillCaretLeft, AiFillCaretRight} from "react-icons/ai";
+import {IconType} from "react-icons";
+import {useRouter} from "next/router";
+
+import {UIContext} from "../../context/ui";
 
 interface LinkItemProps {
   icon: IconType;
@@ -17,21 +21,13 @@ interface LinkItemProps {
 /**
  * Array of links to be displayed in the sidebar
  */
-const LinkItems: Array<LinkItemProps> = [
+const LinkItems: LinkItemProps[] = [
   {name: "Dashboard", icon: MdSpaceDashboard, href: "/dashboard"},
   {name: "Billeteras", icon: FaMoneyBillWave, href: "/wallets"},
   {name: "Historial", icon: GiBackwardTime, href: "/history"},
   {name: "Cuentas", icon: BsFillPiggyBankFill, href: "/accounts"},
   {name: "Presupuesto", icon: BiCalendarCheck, href: "/budget"},
 ];
-
-const SidebarContext = createContext({});
-
-interface SidebarProps {
-  sidebarIsFullWidth: boolean;
-  onClose: () => void;
-  onOpen: () => void;
-}
 
 /**
  * Sidebar component. Shows a sidebar with links to the main pages of the app.
@@ -40,111 +36,101 @@ interface SidebarProps {
  * @param onOpen - Function to open the sidebar.
  * @returns {JSX.Element} Sidebar component
  */
-export const Sidebar = ({sidebarIsFullWidth, onClose, onOpen}: SidebarProps) => {
-  const [selectedOption, setSelectedOption] = React.useState("Dashboard");
+export const Sidebar = () => {
+  const {isSidebarOpen, toggleSidebar} = useContext(UIContext);
 
   return (
-    <SidebarContext.Provider value={{selectedOption, setSelectedOption}}>
-      <Box
-        bg={useColorModeValue("purple.400", "gray.900")}
-        borderRight="1px"
-        borderRightColor={useColorModeValue("white", "white")}
-        h="full"
-        pos="fixed"
-        transition="all 0.3s"
-        w={{md: sidebarIsFullWidth ? 60 : 20}}
-      >
-        <Flex alignItems="center" h="20" justifyContent="space-between" mx="4">
-          <Text color="white" fontFamily="monospace" fontSize="3xl" fontWeight="bold">
-            {sidebarIsFullWidth ? "finArgy" : "fA"}
-          </Text>
-          <Icon
-            as={sidebarIsFullWidth ? AiFillCaretLeft : AiFillCaretRight}
-            color="white"
-            cursor="pointer"
-            fontSize="2xl"
-            onClick={sidebarIsFullWidth ? onClose : onOpen}
-          />
-        </Flex>
-        {LinkItems.map((link, index) => (
-          <FullWidthItem
-            key={index}
-            href={link.href}
-            icon={link.icon}
-            name={link.name}
-            sidebarIsFullWidth={sidebarIsFullWidth}
-          />
-        ))}
-      </Box>
-    </SidebarContext.Provider>
+    <Box
+      bg="purple.400"
+      borderRight="1px"
+      borderRightColor="white"
+      h="full"
+      pos="fixed"
+      transition="all 0.3s"
+      w={isSidebarOpen ? 60 : 20}
+    >
+      <Flex alignItems="center" h={20} justifyContent="space-between" mx={4}>
+        <Text color="white" fontFamily="monospace" fontSize="3xl" fontWeight="bold">
+          {isSidebarOpen ? "finArgy" : "fA"}
+        </Text>
+        <Icon
+          as={isSidebarOpen ? AiFillCaretLeft : AiFillCaretRight}
+          color="white"
+          cursor="pointer"
+          fontSize="2xl"
+          onClick={toggleSidebar}
+        />
+      </Flex>
+      {LinkItems.map((link) => (
+        <NavItem
+          key={link.href}
+          href={link.href}
+          icon={link.icon}
+          isSidebarFullWidth={isSidebarOpen}
+          name={link.name}
+        />
+      ))}
+    </Box>
   );
 };
 
-interface FullWidthItemProps extends FlexProps {
+interface NavItemProps extends FlexProps {
   icon: IconType;
   href: string;
   name: String;
-  sidebarIsFullWidth: boolean;
+  isSidebarFullWidth: boolean;
 }
 /**
- * FullWidthItem component. Shows a link to a page in the sidebar.
+ * NavItem component. Shows a link to a page in the sidebar.
  * @param icon - Icon to show in the sidebar.
  * @param href - Link to the page.
  * @param name - Name of the page.
- * @param sidebarIsFullWidth - Whether the sidebar is open or not.
+ * @param isSidebarFullWidth - Whether the sidebar is open or not.
  * @returns {JSX.Element} Sidebar component
  */
-const FullWidthItem = ({icon, href, name, sidebarIsFullWidth, ...rest}: FullWidthItemProps) => {
-  //Handle selected option state
-  const {selectedOption, setSelectedOption} = useContext(SidebarContext);
+const NavItem = ({icon, href, name, isSidebarFullWidth, ...rest}: NavItemProps) => {
+  // * para eliminar el problema de el estado inicial que puede ser otra ruta
+  const {asPath} = useRouter();
 
   //Boolean to check if the item is selected
-  const isSelected = selectedOption === name;
+  const isSelected = asPath === href;
 
   return (
-    <Link
-      _focus={{boxShadow: "none"}}
-      href="#"
-      style={{textDecoration: "none"}}
-      onClick={() => {
-        setSelectedOption(name);
-        console.log("reditecting to " + href);
-      }}
-    >
-      <Flex
-        _hover={{
-          bg: isSelected ? "white" : "purple.300",
-          // color: "purple.400",
-        }}
-        align="center"
-        bg={isSelected ? "white" : "purple.500"}
-        borderLeftRadius="30px"
-        borderRightRadius={isSelected ? "revert" : "30px"}
-        color={isSelected ? "purple.400" : "white"}
-        cursor="pointer"
-        fontWeight="bold"
-        marginBottom="1"
-        marginLeft="4"
-        marginRight={isSelected ? "0" : "4"}
-        p="4"
-        role="group"
-        transition="all 0.35s"
-        {...rest}
-      >
-        {icon && (
+    <NextLink passHref href={href}>
+      <Link>
+        <Flex
+          _hover={{
+            bg: isSelected ? "white" : "purple.300",
+          }}
+          alignItems="center"
+          bg={isSelected ? "white" : "purple.500"}
+          borderLeftRadius="30px"
+          borderRightRadius={isSelected ? "revert" : "30px"}
+          color={isSelected ? "purple.400" : "white"}
+          fontWeight="bold"
+          h="50px"
+          marginBottom={1}
+          marginLeft={4}
+          marginRight={isSelected ? 0 : 4}
+          p={4}
+          role="group"
+          transition="all 0.35s"
+          {...rest}
+        >
           <Icon
             _groupHover={{
-              color: isSelected ? "purple.400" : "white",
+              color: isSelected ? "purple.400" : "none",
             }}
             as={icon}
-            fontSize="16"
-            fontWeight="bold"
-            h={6}
-            mr="4"
+            fontSize="md"
           />
-        )}
-        {sidebarIsFullWidth && <Text>{name}</Text>}
-      </Flex>
-    </Link>
+          {isSidebarFullWidth && (
+            <Text fontSize="sm" fontWeight="bold" ml={4}>
+              {name}
+            </Text>
+          )}
+        </Flex>
+      </Link>
+    </NextLink>
   );
 };

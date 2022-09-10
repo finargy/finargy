@@ -1,10 +1,9 @@
 import {Box} from "@chakra-ui/react";
 import Head from "next/head";
-import {FC, ReactNode} from "react";
-import {useDisclosure} from "@chakra-ui/react";
+import {FC, ReactNode, useContext} from "react";
 
 import {Navbar} from "../ui";
-import {Sidebar} from "../ui";
+import {UIContext} from "../../context/ui";
 
 interface Props {
   children: ReactNode;
@@ -14,7 +13,7 @@ interface Props {
 }
 
 export const MainLayout: FC<Props> = ({children, title, pageDescription, imageFullUrl}) => {
-  const {isOpen: sidebarIsFullWidth, onOpen, onClose} = useDisclosure();
+  const {isSidebarOpen} = useContext(UIContext);
 
   return (
     <>
@@ -30,18 +29,15 @@ export const MainLayout: FC<Props> = ({children, title, pageDescription, imageFu
         {imageFullUrl && <meta content={imageFullUrl} name="og:image" />}
       </Head>
 
-      {/* Sidebar */}
-      <Sidebar sidebarIsFullWidth={sidebarIsFullWidth} onClose={onClose} onOpen={onOpen} />
+      <nav>
+        <Navbar />
+      </nav>
 
       {/* Main content */}
-      <Box ml={{base: 0, md: sidebarIsFullWidth ? 60 : 20}} transition="all 0.3s">
-        Lorem Ipsum
-      </Box>
-
-      {/* <nav> <Navbar /> </nav> */}
-
       <main>
-        <Box pt={{base: "0", sm: "80px"}}>{children}</Box>
+        <Box ml={isSidebarOpen ? 60 : 20} transition="all 0.3s">
+          {children}
+        </Box>
       </main>
 
       <footer>{/* footer component */}</footer>
