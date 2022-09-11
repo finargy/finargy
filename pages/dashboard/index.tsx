@@ -16,7 +16,7 @@ const DashboardPage = () => {
           expense={2123122}
           incoming={2203130}
           symbol="$"
-          title="Februery Expenses"
+          title="February Expenses"
         />
         <BalanceWidget
           date="12/06/2022"
