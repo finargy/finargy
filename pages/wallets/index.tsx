@@ -1,5 +1,5 @@
-import {HStack} from "@chakra-ui/react";
 import React from "react";
+import {StatGroup} from "@chakra-ui/react";
 
 import {MainLayout} from "../../components/layouts";
 import {WalletWidget} from "../../components/wallets";
@@ -7,25 +7,35 @@ import {WalletWidget} from "../../components/wallets";
 const DashboardPage = () => {
   return (
     <MainLayout
-      pageDescription="Página de resumen de cuentas con gráficos de balance"
-      title="Dashboard"
+      pageDescription="Página de bileteras. Aqui puedes ver todas tus billeteras y sus salos"
+      title="Wallets"
     >
-      <HStack backgroundColor="blackAlpha.100" gap={2} p={10}>
+      <StatGroup flexDirection="column" gap={3} p={3}>
         <WalletWidget
-          date="12/06/2022"
-          expense={2123122}
-          incoming={2203130}
-          symbol="$"
-          title="Februery Expenses"
+          walletBalance={8500}
+          walletColor="#9794ff"
+          walletCurrency="USD"
+          walletName="PayPal"
         />
         <WalletWidget
-          date="12/06/2022"
-          expense={1502}
-          incoming={1003}
-          symbol="$"
-          title="Berlin Congress"
+          walletBalance={7300.2}
+          walletColor="#ef772e"
+          walletCurrency="ARS"
+          walletName="Mastercard"
         />
-      </HStack>
+        <WalletWidget
+          walletBalance={43200.98}
+          walletColor="#4287c2"
+          walletCurrency="ARS"
+          walletName="BBVA"
+        />
+        <WalletWidget
+          walletBalance={1320000}
+          walletColor="#e0b015"
+          walletCurrency="USDT"
+          walletName="Binance"
+        />
+      </StatGroup>
     </MainLayout>
   );
 };
