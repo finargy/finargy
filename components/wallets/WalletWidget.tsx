@@ -32,7 +32,7 @@ export const WalletWidget: FC<Props> = ({
       w="350px"
     >
       <Grid alignItems="center" templateColumns="repeat(2, 1fr)">
-        <Text fontSize="lg" fontWeight="bold">
+        <Text fontSize="2xl" fontWeight="bold" marginBottom="5">
           {walletName}
         </Text>
         <Stat>
