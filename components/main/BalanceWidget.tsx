@@ -22,7 +22,7 @@ import {FaMinus} from "react-icons/fa";
 
 import {abbreviateNumber} from "../../utils";
 
-// ? Para que se usa?
+//TODO: ? Para que se usa?
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 type Props = {
