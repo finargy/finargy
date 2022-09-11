@@ -1,6 +1,8 @@
 import {FC} from "react";
 import {Stat, StatLabel, StatNumber, StatHelpText, Box, Text, Grid} from "@chakra-ui/react";
 
+import {changeHexLuminosity} from "./utils";
+
 type Props = {
   walletName: string;
   walletBalance: number;
@@ -20,9 +22,14 @@ export const WalletWidget: FC<Props> = ({
 }) => {
   let argCurrencyFormat = Intl.NumberFormat("es-AR");
 
+  //Get lighter and darker colors for the background
+  const lighterColor = changeHexLuminosity(walletColor, 10);
+  const darkerColor = changeHexLuminosity(walletColor, -15);
+  const backgroundLinearGradient = `linear-gradient(135deg, ${lighterColor} 0%, ${darkerColor} 75%)`;
+
   return (
     <Box
-      backgroundColor={walletColor}
+      background={backgroundLinearGradient}
       borderRadius="15px"
       boxShadow="lg"
       color="white"
