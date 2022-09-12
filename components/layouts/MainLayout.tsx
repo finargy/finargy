@@ -35,7 +35,7 @@ export const MainLayout: FC<Props> = ({children, title, pageDescription, imageFu
 
       {/* Main content */}
       <main>
-        <Box ml={isSidebarOpen ? 60 : 20} transition="all 0.3s">
+        <Box ml={{base: 0, md: isSidebarOpen ? 60 : 20}} transition="all 0.3s">
           {children}
         </Box>
       </main>
