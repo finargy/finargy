@@ -45,6 +45,7 @@ const UserAvatar = () => {
       colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
       name={`avatar-${session?.user?.name}`}
       size={48}
+      // las variantes pueden ser: "marble", "beam", "pixel", "sunset", "ring", "bauhaus"
       variant="marble"
     />
   );
