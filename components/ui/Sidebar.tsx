@@ -130,10 +130,10 @@ const NavItem = ({icon, href, name, ...rest}: NavItemProps) => {
             bg: isSelected ? "white" : "purple.300",
           }}
           alignItems="center"
-          bg={isSelected ? "white" : "purple.500"}
+          bg={isSelected ? "white" : "#805AD4"}
           borderLeftRadius="30px"
           borderRightRadius={isSelected ? "revert" : "30px"}
-          color={isSelected ? "purple.400" : "white"}
+          color={isSelected ? "#805AD4" : "white"}
           fontWeight="bold"
           h="50px"
           marginBottom={1}
