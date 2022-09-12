@@ -12,6 +12,7 @@ import {useRouter} from "next/router";
 import {useSession} from "next-auth/react";
 import Avatar from "boring-avatars";
 
+import {changeHexLuminosity} from "../../utils";
 import {UIContext} from "../../context/ui";
 
 interface LinkItemProps {
@@ -68,10 +69,13 @@ const UserAvatar = () => {
  */
 export const Sidebar = () => {
   const {isSidebarOpen, toggleSidebar} = useContext(UIContext);
+  //Get lighter and darker colors for the background
+
+  const backgroundLinearGradient = `linear-gradient(135deg, #9F7AEB 0%, #668BD2 50%, #6132A4 100%)`;
 
   return (
     <Box
-      bg="purple.400"
+      bg={backgroundLinearGradient}
       borderRight="1px"
       borderRightColor="white"
       h="full"
