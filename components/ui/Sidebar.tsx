@@ -1,5 +1,5 @@
 import {useContext} from "react";
-import {Box, Flex, Icon, Text, FlexProps, Link} from "@chakra-ui/react";
+import {Box, Flex, Icon, Text, FlexProps, Link, Grid} from "@chakra-ui/react";
 import NextLink from "next/link";
 import {MdSpaceDashboard} from "react-icons/md";
 import {FaMoneyBillWave} from "react-icons/fa";
@@ -9,6 +9,8 @@ import {BiCalendarCheck} from "react-icons/bi";
 import {AiFillCaretLeft, AiFillCaretRight} from "react-icons/ai";
 import {IconType} from "react-icons";
 import {useRouter} from "next/router";
+import {useSession} from "next-auth/react";
+import Avatar from "boring-avatars";
 
 import {UIContext} from "../../context/ui";
 
@@ -30,10 +32,37 @@ const LinkItems: LinkItemProps[] = [
 ];
 
 /**
+ * Creates a user avatar based on the user's name.
+ * @returns {JSX.Element} - User avatar.
+ * If the sidebar is open, the user's name is displayed.
+ */
+const UserAvatar = () => {
+  const {data: session} = useSession();
+  const {isSidebarOpen} = useContext(UIContext);
+
+  const userIcon = (
+    <Avatar
+      colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+      name={`avatar-${session?.user?.name}`}
+      size={48}
+      variant="marble"
+    />
+  );
+
+  return (
+    <Flex alignItems="center" h="50px" marginBottom={1} p={4} transition="all 0.35s">
+      <Grid>{userIcon}</Grid>
+      {isSidebarOpen && (
+        <Text color="white" fontSize="sm" fontWeight="bold" marginLeft={2} whiteSpace="nowrap">
+          {session?.user?.name}
+        </Text>
+      )}
+    </Flex>
+  );
+};
+
+/**
  * Sidebar component. Shows a sidebar with links to the main pages of the app.
- * @param sidebarIsFullWidth - Whether the sidebar is open or not.
- * @param onClose - Function to close the sidebar.
- * @param onOpen - Function to open the sidebar.
  * @returns {JSX.Element} Sidebar component
  */
 export const Sidebar = () => {
@@ -61,14 +90,9 @@ export const Sidebar = () => {
           onClick={toggleSidebar}
         />
       </Flex>
+      <UserAvatar />
       {LinkItems.map((link) => (
-        <NavItem
-          key={link.href}
-          href={link.href}
-          icon={link.icon}
-          isSidebarFullWidth={isSidebarOpen}
-          name={link.name}
-        />
+        <NavItem key={link.href} href={link.href} icon={link.icon} name={link.name} />
       ))}
     </Box>
   );
@@ -78,19 +102,18 @@ interface NavItemProps extends FlexProps {
   icon: IconType;
   href: string;
   name: String;
-  isSidebarFullWidth: boolean;
 }
 /**
  * NavItem component. Shows a link to a page in the sidebar.
  * @param icon - Icon to show in the sidebar.
  * @param href - Link to the page.
  * @param name - Name of the page.
- * @param isSidebarFullWidth - Whether the sidebar is open or not.
  * @returns {JSX.Element} Sidebar component
  */
-const NavItem = ({icon, href, name, isSidebarFullWidth, ...rest}: NavItemProps) => {
+const NavItem = ({icon, href, name, ...rest}: NavItemProps) => {
   // * para eliminar el problema de el estado inicial que puede ser otra ruta
   const {asPath} = useRouter();
+  const {isSidebarOpen} = useContext(UIContext);
 
   //Boolean to check if the item is selected
   const isSelected = asPath === href;
@@ -124,7 +147,7 @@ const NavItem = ({icon, href, name, isSidebarFullWidth, ...rest}: NavItemProps) 
             as={icon}
             fontSize="md"
           />
-          {isSidebarFullWidth && (
+          {isSidebarOpen && (
             <Text fontSize="sm" fontWeight="bold" ml={4}>
               {name}
             </Text>
