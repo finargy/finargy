@@ -13,6 +13,7 @@ const DashboardPage = () => {
       <StatGroup flexDirection="column" gap={3}>
         {/* <TotalBalanceWidget walletBalance={1000} walletCurrency="USD" /> */}
         <WalletWidget
+          isTotalBalance
           walletBalance={7300.2}
           walletColor="#50C5DE"
           walletCurrency="ARS"

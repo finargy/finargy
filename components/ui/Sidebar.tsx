@@ -40,10 +40,12 @@ const UserAvatar = () => {
   const {data: session} = useSession();
   const {isSidebarOpen} = useContext(UIContext);
 
+  //remove surname from name
+  const name = session?.user.name.split(" ")[0];
   const userIcon = (
     <Avatar
       colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
-      name={`avatar-${session?.user?.name}`}
+      name={`${session?.user?.name}`}
       size={48}
       // las variantes pueden ser: "marble", "beam", "pixel", "sunset", "ring", "bauhaus"
       variant="marble"
@@ -55,7 +57,7 @@ const UserAvatar = () => {
       <Grid>{userIcon}</Grid>
       {isSidebarOpen && (
         <Text color="#FEFEFE" fontSize="sm" fontWeight="bold" marginLeft={2} whiteSpace="nowrap">
-          {session?.user?.name}
+          {name}
         </Text>
       )}
     </Flex>
