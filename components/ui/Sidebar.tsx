@@ -80,7 +80,7 @@ export const Sidebar = () => {
       m="10px"
       pos="fixed"
       transition="all 0.3s"
-      w={isSidebarOpen ? 60 : 20}
+      w={isSidebarOpen ? "200px" : "80px"}
     >
       <Flex alignItems="center" h={20} justifyContent="space-between" mx={4}>
         <Text color="white" fontFamily="monospace" fontSize="3xl" fontWeight="bold">

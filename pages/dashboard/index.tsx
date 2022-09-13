@@ -10,7 +10,7 @@ const DashboardPage = () => {
       pageDescription="Página de resumen de cuentas con gráficos de balance"
       title="Dashboard"
     >
-      <HStack gap={2} p={10}>
+      <HStack gap={2}>
         <BalanceWidget
           date="12/06/2022"
           expense={2123122}

@@ -10,7 +10,7 @@ const DashboardPage = () => {
       pageDescription="Página de bileteras. Aqui puedes ver todas tus billeteras y sus salos"
       title="Wallets"
     >
-      <StatGroup flexDirection="column" gap={3} p={3}>
+      <StatGroup flexDirection="column" gap={3}>
         <WalletWidget
           walletBalance={8500}
           walletColor="#9794ff"
