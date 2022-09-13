@@ -89,7 +89,7 @@ users.forEach((user) => {
     icon: "fas fa-wallet",
     totalIncome: 0,
     totalExpense: 0,
-    totalBalance: 0,
+    totalBalance: parseInt(faker.finance.amount(0, 100000, 2)),
     isActive: true,
     isDeleted: false,
   });
