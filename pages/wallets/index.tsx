@@ -41,9 +41,12 @@ const userAccounts = axios
 // });
 
 const DashboardPage = () => {
+  //States for wallets and currencies
   const [wallets, setWallets] = React.useState<any[]>([]);
   const [currencies, setCurrencies] = React.useState<any[]>(hardcodedCurrencies);
 
+  //Get user accounts and set them as wallets
+  //Get currencies and set them (TODO: no hay endpoints para currency todavia)
   useEffect(() => {
     const getWallets = async () => {
       const accounts = await userAccounts;
@@ -73,6 +76,7 @@ const DashboardPage = () => {
   //   return currency.code;
   // };
 
+  //TEMPORAL
   const randomCurrency = () => {
     const randomIndex = Math.floor(Math.random() * currencies.length);
 
@@ -106,6 +110,7 @@ const DashboardPage = () => {
             const pickedCurrency = randomCurrency();
 
             return (
+              //Draw a wallet widget for each userAccount
               <WalletWidget
                 key={account.id}
                 walletBalance={account.totalBalance}
