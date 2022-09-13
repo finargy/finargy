@@ -54,7 +54,7 @@ const UserAvatar = () => {
     <Flex alignItems="center" h="50px" marginBottom={1} p={4} transition="all 0.35s">
       <Grid>{userIcon}</Grid>
       {isSidebarOpen && (
-        <Text color="white" fontSize="sm" fontWeight="bold" marginLeft={2} whiteSpace="nowrap">
+        <Text color="#FEFEFE" fontSize="sm" fontWeight="bold" marginLeft={2} whiteSpace="nowrap">
           {session?.user?.name}
         </Text>
       )}
@@ -76,19 +76,19 @@ export const Sidebar = () => {
     <Box
       bg={backgroundLinearGradient}
       borderRight="1px"
-      borderRightColor="white"
+      borderRightColor="#FEFEFE"
       h="full"
       pos="fixed"
       transition="all 0.3s"
       w={isSidebarOpen ? 60 : 20}
     >
       <Flex alignItems="center" h={20} justifyContent="space-between" mx={4}>
-        <Text color="white" fontFamily="monospace" fontSize="3xl" fontWeight="bold">
+        <Text color="#FEFEFE" fontFamily="monospace" fontSize="3xl" fontWeight="bold">
           {isSidebarOpen ? "finArgy" : "fA"}
         </Text>
         <Icon
           as={isSidebarOpen ? AiFillCaretLeft : AiFillCaretRight}
-          color="white"
+          color="#FEFEFE"
           cursor="pointer"
           fontSize="2xl"
           onClick={toggleSidebar}
@@ -127,13 +127,13 @@ const NavItem = ({icon, href, name, ...rest}: NavItemProps) => {
       <Link>
         <Flex
           _hover={{
-            bg: isSelected ? "white" : "purple.300",
+            bg: isSelected ? "#FEFEFE" : "purple.300",
           }}
           alignItems="center"
-          bg={isSelected ? "white" : "#805AD4"}
+          bg={isSelected ? "#FEFEFE" : "#805AD4"}
           borderLeftRadius="30px"
           borderRightRadius={isSelected ? "revert" : "30px"}
-          color={isSelected ? "#805AD4" : "white"}
+          color={isSelected ? "#805AD4" : "#FEFEFE"}
           fontWeight="bold"
           h="50px"
           marginBottom={1}
