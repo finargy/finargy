@@ -14,10 +14,10 @@ interface IUserSeed extends Omit<IUser, "_id" | "preferredCurrency"> {
   preferredCurrency: Types.ObjectId;
 }
 
-interface IUserAccountSeed extends Omit<IUserAccount, "_id" | "user" | "preferedCurrency"> {
+interface IUserAccountSeed extends Omit<IUserAccount, "_id" | "user" | "preferredCurrency"> {
   _id: Types.ObjectId;
   user: Types.ObjectId;
-  preferedCurrency: Types.ObjectId;
+  preferredCurrency: Types.ObjectId;
 }
 
 interface ICategorySeed extends Omit<ICategory, "_id" | "user"> {
@@ -83,10 +83,11 @@ const userAccounts: IUserAccountSeed[] = [];
 users.forEach((user) => {
   let income = Math.floor(Math.random() * (20000 - 0 + 1) + 0);
   let expense = Math.floor(Math.random() * (20000 - 0 + 1) + 0);
+
   userAccounts.push({
     _id: new Types.ObjectId(),
     user: user._id,
-    preferedCurrency: currencies[0]._id,
+    preferredCurrency: currencies[0]._id,
     name: "Cuenta en pesos",
     icon: "fas fa-wallet",
     totalIncome: income,
@@ -100,7 +101,7 @@ users.forEach((user) => {
   userAccounts.push({
     _id: new Types.ObjectId(),
     user: user._id,
-    preferedCurrency: currencies[1]._id,
+    preferredCurrency: currencies[1]._id,
     name: "Cuenta en dolares",
     icon: "fas fa-wallet",
     totalIncome: income,

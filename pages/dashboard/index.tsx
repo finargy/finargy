@@ -5,12 +5,12 @@ import useSWR from "swr";
 import {MainLayout} from "../../components/layouts";
 import {BalanceWidget, TotalBalance} from "../../components/dashboard";
 import {AuthContext} from "../../context/auth";
-import {IUserAccount} from "../../interfaces";
+import {ICurrency, IUserAccount} from "../../interfaces";
 
 const DashboardPage = () => {
   const {user} = useContext(AuthContext);
   const {data, error} = useSWR<{data: IUserAccount[]}>(
-    `/api/accounts/useraccounts/?user=${user?._id}`,
+    `/api/accounts/useraccounts/?user=${user?._id}&populateCurrency=true`,
   );
   const isLoading = !error && !data;
 
@@ -39,7 +39,7 @@ const DashboardPage = () => {
                   key={account.name}
                   expense={account.totalExpense}
                   incoming={account.totalIncome}
-                  symbol="$"
+                  symbol={(account.preferredCurrency as ICurrency).symbol}
                   title={account.name}
                 />
               ))

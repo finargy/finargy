@@ -8,7 +8,7 @@ export interface IUserAccount {
   totalIncome: number;
   totalExpense: number;
   totalBalance: number;
-  preferedCurrency: ICurrency | string;
+  preferredCurrency: ICurrency | string;
   isActive: boolean;
   isDeleted: boolean;
 
@@ -19,7 +19,7 @@ export interface IUserAccount {
 export interface IUserAccountEditables {
   name?: string;
   icon?: string;
-  preferedCurrency?: string;
+  preferredCurrency?: string;
   totalIncome?: number;
   totalExpense?: number;
   totalBalance?: number;

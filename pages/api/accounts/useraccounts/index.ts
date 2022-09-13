@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         // /api/accounts/useraccounts?id=id
         return getAccount(req, res);
       } else if (req.query.user) {
-        // /api/accounts/useraccounts?user=userID
+        // /api/accounts/useraccounts?user=userID&populateCurrency=boolean&populateUser=boolean
         return getAccountsByUser(req, res);
       }
 
@@ -96,17 +96,26 @@ const getAccount = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 };
 
 /**
- * Gets all the user accounts for that user
- * @param {NextApiRequest} req - NextApiRequest - This is the request object that Next.js provides. It
- * contains information about the request, such as the query parameters, the body, the headers, etc.
+ * It gets all the user accounts for a given user
+ * @param {NextApiRequest} req - NextApiRequest - This is the request object that Next.js provides.
  * @param res - NextApiResponse<Data>
  * @returns An array of user accounts
  */
 const getAccountsByUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const {user = ""} = req.query as {user: string};
+  const {
+    user = "",
+    populateCurrency = "",
+    populateUser = "",
+  } = req.query as {user: string; populateCurrency: string; populateUser: string};
+
+  const isTrue = (value: string) => value === "true";
 
   try {
-    const userAccounts = await getAllUserAccountsByUser(user);
+    const userAccounts = await getAllUserAccountsByUser(
+      user,
+      isTrue(populateCurrency),
+      isTrue(populateUser),
+    );
 
     if (!userAccounts) {
       return res.status(404).json({message: "User account not found"});
@@ -134,7 +143,7 @@ const putAccount = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const editableFields = [
     "name",
     "icon",
-    "preferedCurrency",
+    "preferredCurrency",
     "totalIncome",
     "totalExpense",
     "totalBalance",

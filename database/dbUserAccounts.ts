@@ -51,12 +51,19 @@ export const getUserAccountById = async (
  * @param {string} userId - The user's id.
  * @returns An array of user accounts
  */
-export const getAllUserAccountsByUser = async (userId: string): Promise<IUserAccount[] | null> => {
+export const getAllUserAccountsByUser = async (
+  userId: string,
+  populateCurrency?: boolean,
+  populateUser?: boolean,
+): Promise<IUserAccount[] | null> => {
   if (!isValidObjectId(userId)) return null;
 
   await db.connect();
 
-  const accounts = await UserAccount.find({user: userId}).lean();
+  let accounts = await UserAccount.find({user: userId});
+
+  if (populateCurrency) await UserAccount.populate(accounts, "preferredCurrency");
+  if (populateUser) await UserAccount.populate(accounts, "user");
 
   await db.disconnect();
 

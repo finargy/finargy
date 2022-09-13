@@ -11,7 +11,7 @@ const userAccountSchema = new Schema(
     totalExpense: {type: Number, default: 0},
     totalBalance: {type: Number, default: 0},
 
-    preferedCurrency: {type: mongoose.Schema.Types.ObjectId, ref: "Currency", required: true},
+    preferredCurrency: {type: mongoose.Schema.Types.ObjectId, ref: "Currency", required: true},
     isActive: {type: Boolean, default: true},
     isDeleted: {type: Boolean, default: false},
   },
