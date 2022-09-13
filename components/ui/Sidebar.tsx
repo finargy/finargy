@@ -70,17 +70,17 @@ export const Sidebar = () => {
   const {isSidebarOpen, toggleSidebar} = useContext(UIContext);
 
   //Generate gradent background color for the sidebar
-  const backgroundLinearGradient = `linear-gradient(135deg, #9F7AEB 0%, #668BD2 50%, #6132A4 100%)`;
+  // const backgroundLinearGradient = `linear-gradient(135deg, #9F7AEB 0%, #668BD2 50%, #6132A4 100%)`;
 
   return (
     <Box
-      bg={backgroundLinearGradient}
-      borderRight="1px"
-      borderRightColor="#FEFEFE"
-      h="full"
+      bg="purple.300"
+      borderRadius="10px"
+      h="calc(100vh - 20px)"
+      m="10px"
       pos="fixed"
       transition="all 0.3s"
-      w={isSidebarOpen ? 60 : 20}
+      w={isSidebarOpen ? "200px" : "80px"}
     >
       <Flex alignItems="center" h={20} justifyContent="space-between" mx={4}>
         <Text color="#FEFEFE" fontFamily="monospace" fontSize="3xl" fontWeight="bold">
@@ -94,10 +94,12 @@ export const Sidebar = () => {
           onClick={toggleSidebar}
         />
       </Flex>
-      <UserAvatar />
       {LinkItems.map((link) => (
         <NavItem key={link.href} href={link.href} icon={link.icon} name={link.name} />
       ))}
+      <Box bottom={5} position="fixed">
+        <UserAvatar />
+      </Box>
     </Box>
   );
 };
