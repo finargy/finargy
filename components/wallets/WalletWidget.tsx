@@ -1,4 +1,4 @@
-import {FC} from "react";
+import {FC, useMemo} from "react";
 import {Stat, StatLabel, StatNumber, StatHelpText, Box, Text, Grid} from "@chakra-ui/react";
 
 import {changeHexLuminosity} from "./utils";
@@ -23,8 +23,10 @@ export const WalletWidget: FC<Props> = ({
   let argCurrencyFormat = Intl.NumberFormat("es-AR");
 
   //Get lighter and darker colors for the background
-  const lighterColor = changeHexLuminosity(walletColor, 10);
-  const darkerColor = changeHexLuminosity(walletColor, -15);
+  const [lighterColor, darkerColor] = useMemo(
+    () => [changeHexLuminosity(walletColor, 10), changeHexLuminosity(walletColor, -15)],
+    [walletColor],
+  );
   const backgroundLinearGradient = `linear-gradient(135deg, ${lighterColor} 0%, ${darkerColor} 75%)`;
 
   return (
