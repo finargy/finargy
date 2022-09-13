@@ -2,7 +2,7 @@ import React from "react";
 import {StatGroup, Text} from "@chakra-ui/react";
 
 import {MainLayout} from "../../components/layouts";
-import {WalletWidget, TotalBalanceWidget} from "../../components/wallets";
+import {WalletWidget} from "../../components/wallets";
 
 const DashboardPage = () => {
   return (
@@ -11,7 +11,6 @@ const DashboardPage = () => {
       title="Wallets"
     >
       <StatGroup flexDirection="column" gap={3}>
-        {/* <TotalBalanceWidget walletBalance={1000} walletCurrency="USD" /> */}
         <WalletWidget
           isTotalBalance
           walletBalance={7300.2}
