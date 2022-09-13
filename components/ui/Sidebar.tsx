@@ -40,10 +40,12 @@ const UserAvatar = () => {
   const {data: session} = useSession();
   const {isSidebarOpen} = useContext(UIContext);
 
+  //remove surname from name
+  const name = session?.user.name.split(" ")[0];
   const userIcon = (
     <Avatar
       colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
-      name={`avatar-${session?.user?.name}`}
+      name={`${session?.user?.name}`}
       size={48}
       // las variantes pueden ser: "marble", "beam", "pixel", "sunset", "ring", "bauhaus"
       variant="marble"
@@ -54,8 +56,8 @@ const UserAvatar = () => {
     <Flex alignItems="center" h="50px" marginBottom={1} p={4} transition="all 0.35s">
       <Grid>{userIcon}</Grid>
       {isSidebarOpen && (
-        <Text color="white" fontSize="sm" fontWeight="bold" marginLeft={2} whiteSpace="nowrap">
-          {session?.user?.name}
+        <Text color="#FEFEFE" fontSize="sm" fontWeight="bold" marginLeft={2} whiteSpace="nowrap">
+          {name}
         </Text>
       )}
     </Flex>
@@ -83,12 +85,12 @@ export const Sidebar = () => {
       w={isSidebarOpen ? "200px" : "80px"}
     >
       <Flex alignItems="center" h={20} justifyContent="space-between" mx={4}>
-        <Text color="white" fontFamily="monospace" fontSize="3xl" fontWeight="bold">
+        <Text color="#FEFEFE" fontFamily="monospace" fontSize="3xl" fontWeight="bold">
           {isSidebarOpen ? "finArgy" : "fA"}
         </Text>
         <Icon
           as={isSidebarOpen ? AiFillCaretLeft : AiFillCaretRight}
-          color="white"
+          color="#FEFEFE"
           cursor="pointer"
           fontSize="2xl"
           onClick={toggleSidebar}
@@ -129,13 +131,13 @@ const NavItem = ({icon, href, name, ...rest}: NavItemProps) => {
       <Link>
         <Flex
           _hover={{
-            bg: isSelected ? "white" : "purple.300",
+            bg: isSelected ? "#FEFEFE" : "purple.300",
           }}
           alignItems="center"
-          bg={isSelected ? "white" : "#805AD4"}
+          bg={isSelected ? "#FEFEFE" : "#805AD4"}
           borderLeftRadius="30px"
           borderRightRadius={isSelected ? "revert" : "30px"}
-          color={isSelected ? "#805AD4" : "white"}
+          color={isSelected ? "#805AD4" : "#FEFEFE"}
           fontWeight="bold"
           h="50px"
           marginBottom={1}

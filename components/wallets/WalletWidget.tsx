@@ -1,5 +1,21 @@
 import {FC, useMemo} from "react";
-import {Stat, StatLabel, StatNumber, StatHelpText, Box, Text, Grid} from "@chakra-ui/react";
+import {
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  Box,
+  Text,
+  Grid,
+  GridItem,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
+  Flex,
+} from "@chakra-ui/react";
+import {BsThreeDotsVertical} from "react-icons/bs";
 
 import {changeHexLuminosity} from "./utils";
 
@@ -10,6 +26,7 @@ type Props = {
   walletColor: string;
   //TODO: Logo de la billetera
   walletLogo?: any;
+  isTotalBalance?: boolean;
 };
 
 export const WalletWidget: FC<Props> = ({
@@ -19,6 +36,7 @@ export const WalletWidget: FC<Props> = ({
   walletColor,
   //TODO: Logo de la billetera
   walletLogo,
+  isTotalBalance = false,
 }) => {
   let argCurrencyFormat = Intl.NumberFormat("es-AR");
 
@@ -34,21 +52,46 @@ export const WalletWidget: FC<Props> = ({
       background={backgroundLinearGradient}
       borderRadius="15px"
       boxShadow="lg"
-      color="white"
+      color="#FEFEFE"
       maxH="250px"
       p={2}
       paddingStart={6}
       w="350px"
     >
-      <Grid alignItems="center" templateColumns="repeat(2, 1fr)">
-        <Text fontSize="2xl" fontWeight="bold" marginBottom="5">
-          {walletName}
-        </Text>
-        <Stat>
-          <StatLabel>Balance</StatLabel>
-          <StatNumber>{`$ ${argCurrencyFormat.format(walletBalance)}`}</StatNumber>
-          <StatHelpText>{walletCurrency}</StatHelpText>
-        </Stat>
+      <Grid alignItems="center">
+        <Grid alignItems="center" templateColumns="repeat(2, 1fr)">
+          <Text fontSize="2xl" fontWeight="bold" marginBottom="5">
+            {walletName}
+          </Text>
+          <Flex>
+            <Stat>
+              <StatLabel>Balance</StatLabel>
+              <StatNumber>{`$ ${argCurrencyFormat.format(walletBalance)}`}</StatNumber>
+              <StatHelpText>{walletCurrency}</StatHelpText>
+            </Stat>
+            {isTotalBalance && (
+              <Menu>
+                <MenuButton
+                  alignContent="center"
+                  aria-label="Opciones"
+                  as={IconButton}
+                  color="#FEFEFE"
+                  display="flex"
+                  fontSize="larger"
+                  icon={<BsThreeDotsVertical />}
+                  justifyContent="flex-end"
+                  variant="unstyled"
+                />
+                <MenuList color="#282B40">
+                  <MenuItem>USD</MenuItem>
+                  <MenuItem>ARS</MenuItem>
+                  <MenuItem>EUR</MenuItem>
+                  <MenuItem>GBP</MenuItem>
+                </MenuList>
+              </Menu>
+            )}
+          </Flex>
+        </Grid>
       </Grid>
     </Box>
   );

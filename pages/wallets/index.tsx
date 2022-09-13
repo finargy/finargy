@@ -1,5 +1,5 @@
 import React from "react";
-import {StatGroup} from "@chakra-ui/react";
+import {StatGroup, Text} from "@chakra-ui/react";
 
 import {MainLayout} from "../../components/layouts";
 import {WalletWidget} from "../../components/wallets";
@@ -10,6 +10,18 @@ const DashboardPage = () => {
       pageDescription="Página de bileteras. Aqui puedes ver todas tus billeteras y sus salos"
       title="Wallets"
     >
+      <StatGroup flexDirection="column" gap={3}>
+        <WalletWidget
+          isTotalBalance
+          walletBalance={7300.2}
+          walletColor="#50C5DE"
+          walletCurrency="ARS"
+          walletName="TOTAL"
+        />
+      </StatGroup>
+      <Text fontSize="xl" fontWeight="bold">
+        Cuentas
+      </Text>
       <StatGroup flexDirection="column" gap={3}>
         <WalletWidget
           walletBalance={8500}

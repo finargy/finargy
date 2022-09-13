@@ -52,7 +52,14 @@ export const BalanceWidget: FC<Props> = ({title, expense, incoming, date, symbol
   );
 
   return (
-    <Box backgroundColor="white" borderRadius="15px" boxShadow="lg" maxH="250px" maxW="300px" p={2}>
+    <Box
+      backgroundColor="#FEFEFE"
+      borderRadius="15px"
+      boxShadow="lg"
+      maxH="250px"
+      maxW="300px"
+      p={2}
+    >
       <Stack
         alignItems="center"
         backgroundColor="blackAlpha.100"
