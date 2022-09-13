@@ -2,15 +2,14 @@ import type {NextApiRequest, NextApiResponse} from "next";
 
 import {IUserAccount, IUserAccountEditables} from "../../../../interfaces";
 import {
-  createUserAccount,
   getUserAccountById,
   getAllUserAccounts,
   updateUserAccountById,
   disableUserAccountById,
   softDeleteUserAccountById,
   hardDeleteUserAccountById,
+  getAllUserAccountsByUser,
 } from "../../../../database/dbUserAccounts";
-import {checkContainFields} from "../../../../utils";
 
 type Data = {error?: any; message: string} | {data: IUserAccount} | {data: IUserAccount[]};
 
@@ -24,15 +23,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   switch (req.method) {
     case "GET":
       if (req.query.id) {
-        // /api/accounts/useraccounts/:id
+        // /api/accounts/useraccounts?id=id
         return getAccount(req, res);
+      } else if (req.query.user) {
+        // /api/accounts/useraccounts?user=userID
+        return getAccountsByUser(req, res);
       }
 
       // /api/accounts/useraccounts/
       return getAllAccounts(res);
     case "POST":
-      // /api/accounts/useraccounts/
-      return postAccount(req, res);
+    // /api/accounts/useraccounts/
+    // TODO: post account
+    // return postAccount(req, res);
     case "PUT":
       if (req.query.disable === "true") {
         // /api/accounts/useraccounts/:id/disable
@@ -93,6 +96,30 @@ const getAccount = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 };
 
 /**
+ * Gets all the user accounts for that user
+ * @param {NextApiRequest} req - NextApiRequest - This is the request object that Next.js provides. It
+ * contains information about the request, such as the query parameters, the body, the headers, etc.
+ * @param res - NextApiResponse<Data>
+ * @returns An array of user accounts
+ */
+const getAccountsByUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const {user = ""} = req.query as {user: string};
+
+  try {
+    const userAccounts = await getAllUserAccountsByUser(user);
+
+    if (!userAccounts) {
+      return res.status(404).json({message: "User account not found"});
+    }
+
+    return res.status(200).json({data: userAccounts});
+  } catch (error: any) {
+    //If an error occurs, return a 500
+    return res.status(500).json({error, message: "Internal server error"});
+  }
+};
+
+/**
  * Updates a user account in the database.
  * @param req The request object. Contains the id of the user account to update and the new values.
  * @param res The response object. Contains the updated user account.
@@ -133,7 +160,7 @@ const putAccount = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   }
 
   try {
-    const editedAccount = await updateUserAccountById(id, editAccountDict);
+    const editedAccount = await updateUserAccountById(id, editAccountDict as any);
 
     if (!editedAccount) {
       return res.status(404).json({message: "User account not found"});

@@ -53,7 +53,7 @@ const users: IUserSeed[] = [
     _id: new Types.ObjectId(),
     name: "Admin",
     email: "admin@admin.com",
-    password: bcrypt.hashSync("admin"),
+    password: bcrypt.hashSync("123456"),
     preferredCurrency: currencies[0]._id,
     role: "admin",
     isVerified: true,
@@ -81,28 +81,31 @@ for (let i = 0; i < 10; i++) {
 const userAccounts: IUserAccountSeed[] = [];
 
 users.forEach((user) => {
+  let income = Math.floor(Math.random() * (20000 - 0 + 1) + 0);
+  let expense = Math.floor(Math.random() * (20000 - 0 + 1) + 0);
   userAccounts.push({
     _id: new Types.ObjectId(),
     user: user._id,
     preferedCurrency: currencies[0]._id,
     name: "Cuenta en pesos",
     icon: "fas fa-wallet",
-    totalIncome: 0,
-    totalExpense: 0,
-    totalBalance: parseInt(faker.finance.amount(0, 100000, 2)),
+    totalIncome: income,
+    totalExpense: expense,
+    totalBalance: income - expense,
     isActive: true,
     isDeleted: false,
   });
-
+  income = Math.floor(Math.random() * (20000 - 0 + 1) + 0);
+  expense = Math.floor(Math.random() * (20000 - 0 + 1) + 0);
   userAccounts.push({
     _id: new Types.ObjectId(),
     user: user._id,
     preferedCurrency: currencies[1]._id,
     name: "Cuenta en dolares",
     icon: "fas fa-wallet",
-    totalIncome: 0,
-    totalExpense: 0,
-    totalBalance: 0,
+    totalIncome: income,
+    totalExpense: expense,
+    totalBalance: income - expense,
     isActive: true,
     isDeleted: false,
   });
