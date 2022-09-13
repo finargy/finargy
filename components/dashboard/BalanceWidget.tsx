@@ -29,7 +29,7 @@ type Props = {
   title: string;
   expense: number;
   incoming: number;
-  date: string;
+  date?: string;
   symbol: string;
 };
 
@@ -152,9 +152,11 @@ export const BalanceWidget: FC<Props> = ({title, expense, incoming, date, symbol
             </Text>
           </HStack>
 
-          <Text color="blackAlpha.600" fontSize="sm" fontWeight="bold" mt={2}>
-            {date}
-          </Text>
+          {data && (
+            <Text color="blackAlpha.600" fontSize="sm" fontWeight="bold" mt={2}>
+              {date}
+            </Text>
+          )}
         </GridItem>
       </Grid>
     </Box>

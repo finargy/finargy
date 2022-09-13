@@ -1,5 +1,5 @@
-import {Box, Center, Flex, HStack, Icon, Text, VStack} from "@chakra-ui/react";
 import {FC, useMemo} from "react";
+import {Box, Center, Flex, HStack, Icon, Text, VStack} from "@chakra-ui/react";
 import {Doughnut} from "react-chartjs-2";
 import {FaMinus} from "react-icons/fa";
 
@@ -89,7 +89,7 @@ export const TotalBalance: FC<Props> = ({expense, incoming, symbol}) => {
             {symbol}
           </Text>
           <Text fontSize="sm" fontWeight="bold">
-            {expense < 1000000 ? expense : abbreviateNumber(expense, 2)}
+            {incoming < 1000000 ? incoming : abbreviateNumber(incoming, 2)}
           </Text>
         </HStack>
       </Box>

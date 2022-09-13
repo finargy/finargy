@@ -1,12 +1,18 @@
 import React, {useContext} from "react";
 import {Box, Grid, GridItem, HStack, Text} from "@chakra-ui/react";
+import useSWR from "swr";
 
 import {MainLayout} from "../../components/layouts";
 import {BalanceWidget, TotalBalance} from "../../components/dashboard";
 import {AuthContext} from "../../context/auth";
+import {IUserAccount} from "../../interfaces";
 
 const DashboardPage = () => {
   const {user} = useContext(AuthContext);
+  const {data, error} = useSWR<{data: IUserAccount[]}>(
+    `/api/accounts/useraccounts/?user=${user?._id}`,
+  );
+  const isLoading = !error && !data;
 
   return (
     <MainLayout
@@ -25,20 +31,19 @@ const DashboardPage = () => {
         </GridItem>
         <GridItem colSpan={3} display="flex" justifyContent="center" rowSpan={1}>
           <HStack gap={2}>
-            <BalanceWidget
-              date="12/06/2022"
-              expense={2123122}
-              incoming={2203130}
-              symbol="$"
-              title="February Expenses"
-            />
-            <BalanceWidget
-              date="12/06/2022"
-              expense={1502}
-              incoming={1003}
-              symbol="$"
-              title="Berlin Congress"
-            />
+            {isLoading ? (
+              <Text>Cargando...</Text>
+            ) : (
+              data?.data.map((account) => (
+                <BalanceWidget
+                  key={account.name}
+                  expense={account.totalExpense}
+                  incoming={account.totalIncome}
+                  symbol="$"
+                  title={account.name}
+                />
+              ))
+            )}
           </HStack>
         </GridItem>
       </Grid>

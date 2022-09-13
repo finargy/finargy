@@ -47,6 +47,25 @@ export const getUserAccountById = async (
 };
 
 /**
+ * It returns all the accounts of a user
+ * @param {string} userId - The user's id.
+ * @returns An array of user accounts
+ */
+export const getAllUserAccountsByUser = async (userId: string): Promise<IUserAccount[] | null> => {
+  if (!isValidObjectId(userId)) return null;
+
+  await db.connect();
+
+  const accounts = await UserAccount.find({user: userId}).lean();
+
+  await db.disconnect();
+
+  if (!accounts) return null;
+
+  return accounts;
+};
+
+/**
  * It creates a new user account in the database
  * @param {IUserAccount} accountProps - IUserAccount - This is the object that will
  * be used to create the new account.
