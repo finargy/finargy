@@ -1,5 +1,6 @@
+import {useReducer, FC, useEffect} from "react";
 import axios from "axios";
-import {useReducer, FC} from "react";
+import {useSession} from "next-auth/react";
 
 import {finargyApi} from "../../axiosApi";
 import {IUser} from "../../interfaces";
@@ -22,6 +23,13 @@ const AUTH_INITIAL_STATE: AuthState = {
 
 export const AuthProvider: FC<Props> = ({children}) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
+  const {data, status} = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      dispatch({type: "Auth - Login", payload: data?.user as IUser});
+    }
+  }, [status, data]);
 
   /**
    * Register the user by calling the /user/register endpoint and
