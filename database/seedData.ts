@@ -81,28 +81,31 @@ for (let i = 0; i < 10; i++) {
 const userAccounts: IUserAccountSeed[] = [];
 
 users.forEach((user) => {
+  let income = Math.floor(Math.random() * (20000 - 0 + 1) + 0);
+  let expense = Math.floor(Math.random() * (20000 - 0 + 1) + 0);
   userAccounts.push({
     _id: new Types.ObjectId(),
     user: user._id,
     preferedCurrency: currencies[0]._id,
     name: "Cuenta en pesos",
     icon: "fas fa-wallet",
-    totalIncome: Math.floor(Math.random() * (20000 - 0 + 1) + 0),
-    totalExpense: Math.floor(Math.random() * (20000 - 0 + 1) + 0),
-    totalBalance: 0,
+    totalIncome: income,
+    totalExpense: expense,
+    totalBalance: income - expense,
     isActive: true,
     isDeleted: false,
   });
-
+  income = Math.floor(Math.random() * (20000 - 0 + 1) + 0);
+  expense = Math.floor(Math.random() * (20000 - 0 + 1) + 0);
   userAccounts.push({
     _id: new Types.ObjectId(),
     user: user._id,
     preferedCurrency: currencies[1]._id,
     name: "Cuenta en dolares",
     icon: "fas fa-wallet",
-    totalIncome: Math.floor(Math.random() * (20000 - 0 + 1) + 0),
-    totalExpense: Math.floor(Math.random() * (20000 - 0 + 1) + 0),
-    totalBalance: 0,
+    totalIncome: income,
+    totalExpense: expense,
+    totalBalance: income - expense,
     isActive: true,
     isDeleted: false,
   });
